@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+joblib
+pandas
+scikit-learn
+PyJWT==2.8.0
+python-multipart==0.0.6
