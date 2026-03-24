@@ -2,3 +2,15 @@ smart-city-allocation/venv/
 .DS_Store
 __pycache__/
 *.pyc
+
+# AI Framework and Configuration
+.agent/
+.gemini/
+.gsd/
+adapters/
+docs/
+gsd-template/
+scripts/
+GSD-STYLE.md
+PROJECT_RULES.md
+model_capabilities.yaml

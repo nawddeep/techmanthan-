@@ -28,8 +28,8 @@ export default function Dashboard() {
     const fetchDecision = async () => {
       try {
         const [res, mapRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/system/decision"),
-          axios.get("http://127.0.0.1:8000/map-data")
+          axios.get("/api/system/decision"),
+          axios.get("/api/map-data")
         ]);
         
         setData(res.data);
@@ -95,7 +95,7 @@ export default function Dashboard() {
         <div className="glass-panel text-red-400 p-8 flex flex-col items-center justify-center h-64 text-center">
           <ShieldAlert className="w-12 h-12 mb-4 animate-bounce" />
           <h2 className="text-xl font-bold">Backend Communication Failure</h2>
-          <p className="mt-2 text-slate-400">Ensure the FastAPI server is running on port 8000.</p>
+          <p className="mt-2 text-slate-400">Ensure the backend server is running.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
