@@ -2,7 +2,7 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.routes import traffic, waste, emergency, alerts, map_data, auth, system
+from api.routes import traffic, waste, emergency, alerts, map_data, auth, system, history, explain
 from api.services.ml_service import load_models
 from api.services.simulation_service import run_simulation
 
@@ -27,6 +27,8 @@ app.include_router(emergency.router)
 app.include_router(alerts.router)
 app.include_router(map_data.router)
 app.include_router(system.router)
+app.include_router(history.router)
+app.include_router(explain.router)
 
 @app.on_event("startup")
 async def startup_event():

@@ -40,6 +40,7 @@ class TrafficPredictionResponse(BaseModel):
 class WastePredictionResponse(BaseModel):
     overflow_risk: str
     priority_level: str
+    numeric_score: float
     optimized_collection_suggestion: str
 
 class EmergencyEvent(BaseModel):
@@ -66,13 +67,43 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class FeatureDetail(BaseModel):
+    feature: str
+    display_name: str
+    value: float
+    impact: float
+    effect: str
+
+class ExplainResponse(BaseModel):
+    prediction: str
+    confidence: float
+    top_features: List[FeatureDetail]
+    explanation: str
+
+# For backward compatibility with ml_service.py if it's still being used
+class ModelExplainability(BaseModel):
+    prediction: str
+    confidence: float
+    top_features: List[FeatureDetail]
+    explanation: str
+
+class ROIData(BaseModel):
+    baseline_cost: int
+    optimized_cost: int
+    monthly_savings: int
+    savings_percentage: float
+    annual_projection: int
+    explanation: str
+
 class DecisionTraffic(BaseModel):
     value: float
     status: str
+    features: Optional[TrafficPredictionRequest] = None
 
 class DecisionWaste(BaseModel):
     value: float
     risk: str
+    features: Optional[WastePredictionRequest] = None
 
 class DecisionEmergency(BaseModel):
     type: str
@@ -84,3 +115,5 @@ class DecisionResponse(BaseModel):
     emergency: DecisionEmergency
     alerts: List[str]
     actions: List[str]
+    data_source: str = "simulated"
+    roi: ROIData

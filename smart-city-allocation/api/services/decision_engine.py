@@ -1,6 +1,13 @@
-from api.models.schemas import DecisionResponse, DecisionTraffic, DecisionWaste, DecisionEmergency, AlertLevel
+from api.models.schemas import (
+    DecisionResponse, DecisionTraffic, DecisionWaste, DecisionEmergency, AlertLevel,
+    TrafficPredictionRequest, WastePredictionRequest
+)
 from api.services.simulation_service import get_current_state
 from api.services.alert_service import evaluate_alerts
+from api.services.ml_service import get_traffic_explanation, get_waste_explanation
+from api.services.cost_analysis_service import calculate_costs
+from api.services.history_service import append_history
+import datetime
 
 def generate_decisions() -> DecisionResponse:
     state = get_current_state()
@@ -67,10 +74,41 @@ def generate_decisions() -> DecisionResponse:
     if not actions:
         actions.append("Maintain routine city operations.")
         
+    # Generate ML Explainability for the worst cases
+    now = datetime.datetime.now()
+    t_req = TrafficPredictionRequest(
+        hour=now.hour,
+        day_enc=now.weekday(),
+        junction_enc=1,
+        weather_enc=state.get("weather_enc", 0),
+        vehicles=int((max_traffic / 100) * 800)
+    )
+    t_pred = 1 if max_traffic >= 60 else 0
+    t_exp = get_traffic_explanation(t_req, max_traffic / 100, t_pred)
+
+    w_req = WastePredictionRequest(
+        area=1,
+        day_of_week=now.weekday(),
+        population_density=3500.0,
+        last_collection_days=3,
+        bin_fill_pct=max_waste / 100
+    )
+    w_pred = 1 if max_waste >= 70 else 0
+    w_exp = get_waste_explanation(w_req, max_waste / 100, w_pred)
+
+    # Generate ROI Data
+    emergencies_count = len(state.get("emergencies", []))
+    roi_data = calculate_costs(max_traffic / 100, max_waste / 100, emergencies_count)
+    
+    # Store metrics for historical trends chart
+    append_history(round(max_traffic, 1), round(max_waste, 1))
+
     return DecisionResponse(
-        traffic=DecisionTraffic(value=round(max_traffic, 1), status=t_status),
-        waste=DecisionWaste(value=round(max_waste, 1), risk=w_risk),
+        traffic=DecisionTraffic(value=round(max_traffic, 1), status=t_status, explainability=t_exp, features=t_req),
+        waste=DecisionWaste(value=round(max_waste, 1), risk=w_risk, explainability=w_exp, features=w_req),
         emergency=DecisionEmergency(type=e_type, severity=e_sev),
         alerts=alerts,
-        actions=actions
+        actions=actions,
+        data_source=state.get("data_source", "simulated"),
+        roi=roi_data
     )

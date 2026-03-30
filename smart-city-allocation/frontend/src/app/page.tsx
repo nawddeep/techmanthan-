@@ -8,13 +8,23 @@ import AlertPanel from "@/components/AlertPanel";
 import DecisionPanel from "@/components/DecisionPanel";
 import MapComponent from "@/components/MapComponent";
 import Charts from "@/components/Charts";
+import ROICard from "@/components/ROICard";
 
 interface SystemDecision {
-  traffic: { value: number; status: string };
-  waste: { value: number; risk: string };
+  traffic: { value: number; status: string; features?: any };
+  waste: { value: number; risk: string; features?: any };
   emergency: { type: string; severity: string };
   alerts: string[];
   actions: string[];
+  data_source?: string;
+  roi?: {
+    baseline_cost: number;
+    optimized_cost: number;
+    monthly_savings: number;
+    savings_percentage: number;
+    annual_projection: number;
+    explanation: string;
+  };
 }
 
 export default function Dashboard() {
@@ -27,9 +37,10 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDecision = async () => {
       try {
-        const [res, mapRes] = await Promise.all([
+        const [res, mapRes, historyRes] = await Promise.all([
           axios.get("/api/system/decision"),
-          axios.get("/api/map-data")
+          axios.get("/api/map-data"),
+          axios.get("/api/history/trends")
         ]);
         
         setData(res.data);
@@ -37,18 +48,17 @@ export default function Dashboard() {
         setError(false);
         setLastUpdate(new Date());
 
-        const now = new Date();
-        const timeStr = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-        
-        setHistory(prev => {
-          const newHistory = [...prev, {
-            time: timeStr,
-            traffic: res.data.traffic.value,
-            waste: res.data.waste.value
-          }];
-          if (newHistory.length > 15) newHistory.shift();
-          return newHistory;
-        });
+        const hData = historyRes.data;
+        if (hData && Array.isArray(hData.timestamps)) {
+          const remappedHistory = hData.timestamps.map((t: string, i: number) => ({
+            time: t,
+            traffic: hData.traffic[i],
+            waste: hData.waste[i]
+          }));
+          setHistory(remappedHistory);
+        } else {
+          setHistory([]);
+        }
 
       } catch (err) {
         console.error("API Fetch Error:", err);
@@ -80,6 +90,17 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Smart City <span className="text-blue-500">Command Center</span></h1>
         </div>
         <div className="flex items-center gap-4 text-sm font-medium text-slate-400">
+          {data?.data_source && (
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${
+              data.data_source === "live" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 animate-pulse" : 
+              data.data_source === "cached" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" : 
+              "bg-rose-500/10 text-rose-400 border-rose-500/20"
+            }`}>
+              <span className="font-bold tracking-widest text-[11px] uppercase">
+                {data.data_source === "live" ? "🟢 LIVE" : data.data_source === "cached" ? "🟡 CACHED" : "🔴 SIMULATED"}
+              </span>
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span>{lastUpdate.toLocaleTimeString()}</span>
@@ -107,6 +128,8 @@ export default function Dashboard() {
             statusText={data?.traffic.status}
             statusLevel={data?.traffic.status as any}
             icon={<Navigation />}
+            apiPath="/api/explain/traffic"
+            features={data?.traffic.features}
           />
           <KPICard 
             title="Waste Overflow" 
@@ -114,6 +137,8 @@ export default function Dashboard() {
             statusText={data?.waste.risk}
             statusLevel={data?.waste.risk as any}
             icon={<BarChart3 />}
+            apiPath="/api/explain/waste"
+            features={data?.waste.features}
           />
           <KPICard 
             title="Active Emergency" 
@@ -122,13 +147,17 @@ export default function Dashboard() {
             statusLevel={data?.emergency.severity as any}
             icon={<Flame />}
           />
-          <div className="glass-panel p-6 flex flex-col justify-between border-slate-700/50">
-            <div className="flex justify-between items-center mb-4 text-slate-400">
-              <h3 className="text-sm font-semibold uppercase tracking-wider">Total Alerts</h3>
-              <AlertCircle className="w-5 h-5 opacity-60 text-yellow-500" />
-            </div>
-            <div className="text-4xl font-bold text-slate-100">{data?.alerts.length || 0}</div>
-          </div>
+          {data?.roi ? (
+             <ROICard roiData={data.roi} />
+          ) : (
+             <div className="glass-panel p-6 flex flex-col justify-between border-slate-700/50">
+               <div className="flex justify-between items-center mb-4 text-slate-400">
+                 <h3 className="text-sm font-semibold uppercase tracking-wider">Total Alerts</h3>
+                 <AlertCircle className="w-5 h-5 opacity-60 text-yellow-500" />
+               </div>
+               <div className="text-4xl font-bold text-slate-100">{data?.alerts.length || 0}</div>
+             </div>
+          )}
 
           {/* Core Feature: Decision Panel (spans wide) */}
           <div className="col-span-1 md:col-span-2 xl:col-span-3">

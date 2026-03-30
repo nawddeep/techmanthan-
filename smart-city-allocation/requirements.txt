@@ -8,3 +8,5 @@ scikit-learn
 PyJWT==2.8.0
 python-multipart==0.0.6
 gunicorn
+requests
+shap

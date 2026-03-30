@@ -2,11 +2,14 @@ import asyncio
 import random
 from datetime import datetime
 from api.models.schemas import EventType, EmergencySeverity, EmergencyEvent
+from api.services.external_data_service import get_integrated_data
 
 city_state = {
     "traffic_levels": {loc: random.uniform(0.1, 0.9) for loc in range(1, 11)},
     "waste_levels": {loc: random.uniform(0.1, 0.9) for loc in range(1, 11)},
-    "emergencies": []
+    "emergencies": [],
+    "data_source": "simulated",
+    "weather_enc": 0
 }
 
 async def run_simulation():
@@ -18,9 +21,16 @@ async def run_simulation():
         await asyncio.sleep(5)
 
 def update_city_state():
+    # Fetch external data
+    ext_data = get_integrated_data()
+    city_state["data_source"] = ext_data["source"]
+    city_state["weather_enc"] = ext_data["weather_enc"]
+    base_traffic = ext_data["base_congestion"]
+
     for loc in city_state["traffic_levels"]:
         change = random.uniform(-0.15, 0.15)
-        new_val = city_state["traffic_levels"][loc] + change
+        # Weight real simulation data in
+        new_val = (city_state["traffic_levels"][loc] + change) * 0.5 + (base_traffic * 0.5)
         city_state["traffic_levels"][loc] = max(0.0, min(1.0, new_val))
         
     for loc in city_state["waste_levels"]:

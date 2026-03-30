@@ -3,8 +3,10 @@ import joblib
 import pandas as pd
 from api.models.schemas import (
     TrafficPredictionRequest, TrafficPredictionResponse,
-    WastePredictionRequest, WastePredictionResponse
+    WastePredictionRequest, WastePredictionResponse,
+    ModelExplainability
 )
+from api.services.explainability_service import explain_prediction
 
 _traffic_model = None
 _waste_model = None
@@ -52,7 +54,7 @@ def predict_traffic(req: TrafficPredictionRequest) -> TrafficPredictionResponse:
 def predict_waste(req: WastePredictionRequest) -> WastePredictionResponse:
     if not _waste_model:
         return WastePredictionResponse(
-            overflow_risk="low", priority_level="Low", optimized_collection_suggestion="Routine"
+            overflow_risk="low", priority_level="Low", numeric_score=0.1, optimized_collection_suggestion="Routine"
         )
     df = pd.DataFrame([{
         'area': req.area,
@@ -62,6 +64,7 @@ def predict_waste(req: WastePredictionRequest) -> WastePredictionResponse:
         'bin_fill_pct': req.bin_fill_pct
     }])
     pred = _waste_model.predict(df)[0]
+    prob = _waste_model.predict_proba(df)[0].max()
     
     if pred == 1:
         risk, priority, suggestion = "high", "Urgent", "Dispatch collection immediately"
@@ -71,5 +74,32 @@ def predict_waste(req: WastePredictionRequest) -> WastePredictionResponse:
     return WastePredictionResponse(
         overflow_risk=risk,
         priority_level=priority,
+        numeric_score=float(prob),
         optimized_collection_suggestion=suggestion
     )
+
+def get_traffic_explanation(req: TrafficPredictionRequest, prob: float, pred: int):
+    if not _traffic_model:
+        return None
+    df = pd.DataFrame([{
+        'hour': req.hour,
+        'day_enc': req.day_enc,
+        'junction_enc': req.junction_enc,
+        'weather_enc': req.weather_enc,
+        'vehicles': req.vehicles
+    }])
+    exp_dict = explain_prediction(_traffic_model, df, "traffic", prob, pred)
+    return ModelExplainability(**exp_dict)
+
+def get_waste_explanation(req: WastePredictionRequest, prob: float, pred: int):
+    if not _waste_model:
+        return None
+    df = pd.DataFrame([{
+        'area': req.area,
+        'day_of_week': req.day_of_week,
+        'population_density': req.population_density,
+        'last_collection_days': req.last_collection_days,
+        'bin_fill_pct': req.bin_fill_pct
+    }])
+    exp_dict = explain_prediction(_waste_model, df, "waste", prob, pred)
+    return ModelExplainability(**exp_dict)
