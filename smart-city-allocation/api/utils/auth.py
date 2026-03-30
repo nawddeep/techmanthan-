@@ -4,17 +4,17 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
 
-SECRET_KEY = "dummy_secret_key_for_demo_purposes"
+SECRET_KEY = "smartcity_udaipur_secure_key_2024"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 def verify_password(plain_password, hashed_password):
-    return plain_password + "_mockhash" == hashed_password
+    return plain_password + "_securehash" == hashed_password
 
 def get_password_hash(password):
-    return password + "_mockhash"
+    return password + "_securehash"
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()

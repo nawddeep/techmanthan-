@@ -9,10 +9,12 @@ import DecisionPanel from "@/components/DecisionPanel";
 import MapComponent from "@/components/MapComponent";
 import Charts from "@/components/Charts";
 import ROICard from "@/components/ROICard";
+import HealthScoreCard from "@/components/HealthScoreCard";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 interface SystemDecision {
   traffic: { value: number; status: string; features?: any };
-  waste: { value: number; risk: string; features?: any };
+  waste: { value: number; risk: string; features?: any; waste_overflow_eta?: string };
   emergency: { type: string; severity: string };
   alerts: string[];
   actions: string[];
@@ -25,6 +27,7 @@ interface SystemDecision {
     annual_projection: number;
     explanation: string;
   };
+  city_health_score?: number;
 }
 
 export default function Dashboard() {
@@ -71,13 +74,7 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!data && !error) {
-    return (
-      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center text-blue-500">
-        <Loader2 className="w-12 h-12 animate-spin" />
-      </div>
-    );
-  }
+  // Loading states are now handled seamlessly via skeletons directly in the grid.
 
   return (
     <main className="min-h-screen p-4 md:p-8 flex flex-col gap-6">
@@ -119,66 +116,91 @@ export default function Dashboard() {
           <p className="mt-2 text-slate-400">Ensure the backend server is running.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+       <ErrorBoundary fallbackText="Something went wrong">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           
-          {/* Top Row: KPIs */}
-          <KPICard 
-            title="Traffic Density" 
-            value={`${data?.traffic.value.toFixed(1)}%`}
-            statusText={data?.traffic.status}
-            statusLevel={data?.traffic.status as any}
-            icon={<Navigation />}
-            apiPath="/api/explain/traffic"
-            features={data?.traffic.features}
-          />
-          <KPICard 
-            title="Waste Overflow" 
-            value={`${data?.waste.value.toFixed(1)}%`}
-            statusText={data?.waste.risk}
-            statusLevel={data?.waste.risk as any}
-            icon={<BarChart3 />}
-            apiPath="/api/explain/waste"
-            features={data?.waste.features}
-          />
-          <KPICard 
-            title="Active Emergency" 
-            value={data?.emergency.type || "None"}
-            statusText={data?.emergency.severity}
-            statusLevel={data?.emergency.severity as any}
-            icon={<Flame />}
-          />
-          {data?.roi ? (
-             <ROICard roiData={data.roi} />
-          ) : (
-             <div className="glass-panel p-6 flex flex-col justify-between border-slate-700/50">
-               <div className="flex justify-between items-center mb-4 text-slate-400">
-                 <h3 className="text-sm font-semibold uppercase tracking-wider">Total Alerts</h3>
-                 <AlertCircle className="w-5 h-5 opacity-60 text-yellow-500" />
+          {/* Top Row: KPIs (with Skeletons) */}
+          {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
+            <HealthScoreCard score={data?.city_health_score || 100} />
+          )}
+          
+          {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
+            <KPICard 
+              title="Traffic Density" 
+              value={`${data?.traffic.value.toFixed(1)}%`}
+              statusText={data?.traffic.status}
+              statusLevel={data?.traffic.status as any}
+              icon={<Navigation />}
+              apiPath="/api/explain/traffic"
+              features={data?.traffic.features}
+            />
+          )}
+
+          {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
+            <KPICard 
+              title="Waste Overflow" 
+              value={`${data?.waste.value.toFixed(1)}%`}
+              subText={data?.waste.waste_overflow_eta ? `ETA: ${data?.waste.waste_overflow_eta}` : undefined}
+              statusText={data?.waste.risk}
+              statusLevel={data?.waste.risk as any}
+              icon={<BarChart3 />}
+              apiPath="/api/explain/waste"
+              features={data?.waste.features}
+            />
+          )}
+          {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
+            <KPICard 
+              title="Active Emergency" 
+              value={data?.emergency.type || "None"}
+              statusText={data?.emergency.severity}
+              statusLevel={data?.emergency.severity as any}
+              icon={<Flame />}
+            />
+          )}
+          
+          {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
+            data?.roi ? (
+               <ROICard roiData={data.roi} />
+            ) : (
+               <div className="glass-panel p-6 flex flex-col justify-between border-slate-700/50">
+                 <div className="flex justify-between items-center mb-4 text-slate-400">
+                   <h3 className="text-sm font-semibold uppercase tracking-wider">Total Alerts</h3>
+                   <AlertCircle className="w-5 h-5 opacity-60 text-yellow-500" />
+                 </div>
+                 <div className="text-4xl font-bold text-slate-100">{data?.alerts.length || 0}</div>
                </div>
-               <div className="text-4xl font-bold text-slate-100">{data?.alerts.length || 0}</div>
-             </div>
+            )
           )}
 
           {/* Core Feature: Decision Panel (spans wide) */}
           <div className="col-span-1 md:col-span-2 xl:col-span-3">
-             <DecisionPanel actions={data?.actions || []} />
+             <ErrorBoundary fallbackText="Decision Panel Error">
+                <DecisionPanel actions={data?.actions || []} />
+             </ErrorBoundary>
           </div>
 
           {/* Right Column: Alerts */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 row-span-2">
-            <AlertPanel alerts={data?.alerts || []} />
+            <ErrorBoundary fallbackText="Alerts Panel Error">
+               <AlertPanel alerts={data?.alerts || []} />
+            </ErrorBoundary>
           </div>
 
           {/* Map Component */}
           <div className="col-span-1 md:col-span-2 lg:col-span-1 border-r border-slate-800 pr-0">
-            <MapComponent mapData={mapData} />
+            <ErrorBoundary fallbackText="Map Render Error">
+               {!data ? <div className="glass-panel h-[400px] animate-pulse bg-slate-800/40 rounded-xl" /> : <MapComponent mapData={mapData} />}
+            </ErrorBoundary>
           </div>
 
           {/* Charts Component */}
           <div className="col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
-            <Charts history={history} />
+            <ErrorBoundary fallbackText="Chart Render Error">
+               {!data ? <div className="glass-panel h-[400px] animate-pulse bg-slate-800/40 rounded-xl" /> : <Charts history={history} />}
+            </ErrorBoundary>
           </div>
         </div>
+       </ErrorBoundary>
       )}
     </main>
   );

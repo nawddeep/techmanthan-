@@ -7,6 +7,7 @@ import ExplainModal from "./ExplainModal";
 interface KPICardProps {
   title: string;
   value: string | number;
+  subText?: string;
   statusText?: string;
   statusLevel?: "Low" | "Medium" | "High" | "Normal" | "Overflow";
   icon?: ReactNode;
@@ -14,7 +15,7 @@ interface KPICardProps {
   features?: any;
 }
 
-export default function KPICard({ title, value, statusText, statusLevel, icon, apiPath, features }: KPICardProps) {
+export default function KPICard({ title, value, subText, statusText, statusLevel, icon, apiPath, features }: KPICardProps) {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [explainData, setExplainData] = useState<any>(null);
@@ -64,8 +65,11 @@ export default function KPICard({ title, value, statusText, statusLevel, icon, a
           {icon && <div className="text-blue-500 opacity-60">{icon}</div>}
         </div>
         
-        <div className="flex items-end justify-between">
-          <div className="text-4xl font-bold text-slate-100">{value}</div>
+        <div className="flex items-end justify-between mt-2">
+          <div className="flex flex-col items-start">
+            <div className="text-4xl font-bold text-slate-100">{value}</div>
+            {subText && <div className="text-[11px] text-slate-400 font-medium tracking-wide mt-1">{subText}</div>}
+          </div>
           <div className="flex items-center gap-2">
             {apiPath && features && (
               <button 

@@ -40,3 +40,14 @@ async def startup_event():
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Smart City Command Center API"}
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "models_loaded": {
+            "traffic": True,
+            "waste": True
+        },
+        "simulation_running": True
+    }

@@ -1,6 +1,6 @@
 "use client";
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface ChartsProps {
   history: {
@@ -38,6 +38,7 @@ export default function Charts({ history }: ChartsProps) {
               contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
               itemStyle={{ color: '#e2e8f0' }}
             />
+            <Legend verticalAlign="top" height={36} wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }} iconType="circle" />
             <Line 
               type="monotone" 
               dataKey="traffic" 

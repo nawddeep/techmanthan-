@@ -99,11 +99,14 @@ class DecisionTraffic(BaseModel):
     value: float
     status: str
     features: Optional[TrafficPredictionRequest] = None
+    explainability: Optional[ModelExplainability] = None
 
 class DecisionWaste(BaseModel):
     value: float
     risk: str
     features: Optional[WastePredictionRequest] = None
+    explainability: Optional[ModelExplainability] = None
+    waste_overflow_eta: str = "N/A"
 
 class DecisionEmergency(BaseModel):
     type: str
@@ -117,3 +120,4 @@ class DecisionResponse(BaseModel):
     actions: List[str]
     data_source: str = "simulated"
     roi: ROIData
+    city_health_score: float = 100.0

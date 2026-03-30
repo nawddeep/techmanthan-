@@ -9,6 +9,25 @@ from api.services.cost_analysis_service import calculate_costs
 from api.services.history_service import append_history
 import datetime
 
+def calculate_city_health_score(max_traffic: float, max_waste: float, emergencies: list, alerts: list) -> float:
+    score = 100.0
+    score -= min(35, max_traffic * 0.35)
+    score -= min(30, max_waste * 0.30)
+    score -= min(20, len(emergencies) * 5)
+    score -= min(15, len(alerts) * 1.5)
+    return round(max(0, score), 1)
+
+def predict_overflow_eta(current_fill: float) -> str:
+    avg_fill_rate_per_minute = 0.36
+    if current_fill >= 100:
+        return "OVERFLOW NOW"
+    if current_fill < 50:
+        return "Safe"
+    minutes_left = (100 - current_fill) / avg_fill_rate_per_minute
+    if minutes_left < 60:
+        return f"~{int(minutes_left)} min"
+    return f"~{minutes_left/60:.1f} hrs"
+
 def generate_decisions() -> DecisionResponse:
     state = get_current_state()
     raw_alerts = evaluate_alerts()
@@ -100,15 +119,20 @@ def generate_decisions() -> DecisionResponse:
     emergencies_count = len(state.get("emergencies", []))
     roi_data = calculate_costs(max_traffic / 100, max_waste / 100, emergencies_count)
     
+    # Calculate Phase 2 Metrics
+    city_health_score = calculate_city_health_score(max_traffic, max_waste, emergencies, raw_alerts)
+    waste_overflow_eta = predict_overflow_eta(max_waste)
+    
     # Store metrics for historical trends chart
     append_history(round(max_traffic, 1), round(max_waste, 1))
 
     return DecisionResponse(
         traffic=DecisionTraffic(value=round(max_traffic, 1), status=t_status, explainability=t_exp, features=t_req),
-        waste=DecisionWaste(value=round(max_waste, 1), risk=w_risk, explainability=w_exp, features=w_req),
+        waste=DecisionWaste(value=round(max_waste, 1), risk=w_risk, explainability=w_exp, features=w_req, waste_overflow_eta=waste_overflow_eta),
         emergency=DecisionEmergency(type=e_type, severity=e_sev),
         alerts=alerts,
         actions=actions,
         data_source=state.get("data_source", "simulated"),
-        roi=roi_data
+        roi=roi_data,
+        city_health_score=city_health_score
     )
