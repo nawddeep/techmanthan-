@@ -11,6 +11,7 @@ import Charts from "@/components/Charts";
 import ROICard from "@/components/ROICard";
 import HealthScoreCard from "@/components/HealthScoreCard";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import VoiceAssistant from "@/components/VoiceAssistant";
 
 interface SystemDecision {
   traffic: { value: number; status: string; features?: any };
@@ -104,10 +105,21 @@ export default function Dashboard() {
           </div>
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${error ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"}`}>
             <RefreshCw className={`w-4 h-4 ${!error && "animate-spin-slow duration-[3000ms]"}`} />
-            <span>{error ? "CONNECTION LOST" : "SYSTEM LIVE"}</span>
+            <span>{error ? "CONNECTION LOST" : "SYSTEM ONLINE"}</span>
           </div>
         </div>
       </header>
+
+      {/* Positioning & Honesty Notice */}
+      <div className="bg-slate-800/80 border border-slate-700 p-4 rounded-xl flex flex-col md:flex-row items-center gap-4 text-sm text-slate-300 shadow-md">
+        <div className="bg-blue-500/20 p-2 rounded-full hidden md:block">
+          <Activity className="w-5 h-5 text-blue-400" />
+        </div>
+        <div className="text-center md:text-left">
+          <p className="font-semibold mb-1 text-slate-200">Data Source Transparency</p>
+          <p>Traffic and waste signals are simulated using real-world behavioral patterns, while weather data is fetched from a live API. We simulate urban data in real time using realistic behavioral patterns, and integrate live APIs where available to demonstrate hybrid system capability.</p>
+        </div>
+      </div>
 
       {error ? (
         <div className="glass-panel text-red-400 p-8 flex flex-col items-center justify-center h-64 text-center">
@@ -121,32 +133,38 @@ export default function Dashboard() {
           
           {/* Top Row: KPIs (with Skeletons) */}
           {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
-            <HealthScoreCard score={data?.city_health_score || 100} />
+            <div id="health-section" className="h-full">
+              <HealthScoreCard score={data?.city_health_score || 100} />
+            </div>
           )}
           
           {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
-            <KPICard 
-              title="Traffic Density" 
-              value={`${data?.traffic.value.toFixed(1)}%`}
-              statusText={data?.traffic.status}
-              statusLevel={data?.traffic.status as any}
-              icon={<Navigation />}
-              apiPath="/api/explain/traffic"
-              features={data?.traffic.features}
-            />
+            <div id="traffic-section" className="h-full">
+              <KPICard 
+                title="Traffic Density" 
+                value={`${data?.traffic.value.toFixed(1)}%`}
+                statusText={data?.traffic.status}
+                statusLevel={data?.traffic.status as any}
+                icon={<Navigation />}
+                apiPath="/api/explain/traffic"
+                features={data?.traffic.features}
+              />
+            </div>
           )}
 
           {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
-            <KPICard 
-              title="Waste Overflow" 
-              value={`${data?.waste.value.toFixed(1)}%`}
-              subText={data?.waste.waste_overflow_eta ? `ETA: ${data?.waste.waste_overflow_eta}` : undefined}
-              statusText={data?.waste.risk}
-              statusLevel={data?.waste.risk as any}
-              icon={<BarChart3 />}
-              apiPath="/api/explain/waste"
-              features={data?.waste.features}
-            />
+            <div id="waste-section" className="h-full">
+              <KPICard 
+                title="Waste Overflow" 
+                value={`${data?.waste.value.toFixed(1)}%`}
+                subText={data?.waste.waste_overflow_eta ? `ETA: ${data?.waste.waste_overflow_eta}` : undefined}
+                statusText={data?.waste.risk}
+                statusLevel={data?.waste.risk as any}
+                icon={<BarChart3 />}
+                apiPath="/api/explain/waste"
+                features={data?.waste.features}
+              />
+            </div>
           )}
           {!data ? <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6"><div className="h-3 bg-slate-700/50 rounded w-1/3"></div><div className="h-8 bg-slate-700/50 rounded w-1/2"></div></div> : (
             <KPICard 
@@ -173,14 +191,14 @@ export default function Dashboard() {
           )}
 
           {/* Core Feature: Decision Panel (spans wide) */}
-          <div className="col-span-1 md:col-span-2 xl:col-span-3">
+          <div id="decision-section" className="col-span-1 md:col-span-2 xl:col-span-3">
              <ErrorBoundary fallbackText="Decision Panel Error">
                 <DecisionPanel actions={data?.actions || []} />
              </ErrorBoundary>
           </div>
 
           {/* Right Column: Alerts */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 row-span-2">
+          <div id="alert-section" className="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 row-span-2">
             <ErrorBoundary fallbackText="Alerts Panel Error">
                <AlertPanel alerts={data?.alerts || []} />
             </ErrorBoundary>
@@ -202,6 +220,7 @@ export default function Dashboard() {
         </div>
        </ErrorBoundary>
       )}
+      <VoiceAssistant />
     </main>
   );
 }

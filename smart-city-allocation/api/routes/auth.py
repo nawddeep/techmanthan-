@@ -6,7 +6,7 @@ from api.utils.auth import verify_password, create_access_token, ACCESS_TOKEN_EX
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-fake_users_db = {
+demo_users_db = {
     "admin": {
         "username": "admin",
         "hashed_password": get_password_hash("admin123"),
@@ -20,9 +20,9 @@ fake_users_db = {
 }
 
 def authenticate_user(username: str, password: str):
-    if username not in fake_users_db:
+    if username not in demo_users_db:
         return False
-    user = fake_users_db[username]
+    user = demo_users_db[username]
     if not verify_password(password, user["hashed_password"]):
         return False
     return user

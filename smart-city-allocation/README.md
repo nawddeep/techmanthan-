@@ -1,17 +1,19 @@
 # 🏙️ Smart City Resource Allocation Command Center
 
-An AI-powered, real-time command center dashboard designed to simulate and manage Smart City resources in Udaipur. The system continuously ingests live simulation data, runs highly trained machine learning predictive models, and surfaces critical metrics to city operators through a stunning Next.js interface.
+An AI-powered, real-time command center dashboard designed to simulate and manage Smart City resources in Udaipur. The system continuously ingests real-time simulated data based on real-world urban patterns, with live weather API integration, runs highly trained machine learning predictive models, and surfaces critical metrics to city operators through a stunning Next.js interface.
 
 ### 🌟 Key Features
 - **Real-Time Simulation Engine**: A continuous background daemon simulating city-wide telemetry data (traffic, waste levels, incidents).
 - **Traffic Congestion AI**: Predicts traffic congestion and recommends dynamic rerouting based on historical machine learning data.
 - **Waste Overflow AI**: Monitors waste bin fill percentages and triggers immediate collection vehicles to avoid hazardous overflow.
 - **Rapid Emergency Response Layout**: Tracks active emergencies across sectors and surfaces actionable incident control insights.
-- **Interactive Live Tracking Map**: Integrated Leaflet capabilities marking precise problem areas, dynamically rerendering with the latest data.
+- **Interactive Tracking Map**: Integrated Leaflet capabilities marking precise problem areas, dynamically rerendering with the latest data.
 
 ---
 
 ## 🏗️ Architecture
+
+> **Data Transparency**: Traffic and waste signals are simulated using real-world behavioral patterns, while weather data is fetched from a live API. We simulate urban data in real time using realistic behavioral patterns, and integrate live APIs where available to demonstrate hybrid system capability.
 
 The project has evolved into a robust decoupled system:
 * **Frontend**: Modern `Next.js 14` App Router using `TailwindCSS` for gorgeous, high-fidelity responsive design. Employs `Lucide React` and `Recharts` for intuitive dataviz.

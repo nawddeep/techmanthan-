@@ -60,10 +60,10 @@ def fetch_traffic_data(lat: float, lon: float):
             
         _cache["traffic"]["data"] = {"congestion_factor": base_traffic}
         _cache["traffic"]["timestamp"] = current_time
-        return {"data": _cache["traffic"]["data"], "source": "live"}
+        return {"data": _cache["traffic"]["data"], "source": "simulated"}
         
     except Exception as e:
-        print(f"Error fetching live traffic: {e}")
+        print(f"Error fetching simulated traffic: {e}")
         if _cache["traffic"]["data"]:
              return {"data": _cache["traffic"]["data"], "source": "cached"}
         return {"data": {"congestion_factor": 0.5}, "source": "simulated"}
