@@ -1,66 +1,100 @@
-# 🏙️ Smart City Resource Allocation Command Center
+# Smart City Resource Allocation — Udaipur
 
-An AI-powered, real-time command center dashboard designed to simulate and manage Smart City resources in Udaipur. The system continuously ingests real-time simulated data based on real-world urban patterns, with live weather API integration, runs highly trained machine learning predictive models, and surfaces critical metrics to city operators through a stunning Next.js interface.
+AI-assisted command center for traffic congestion, waste overflow, and emergency risk, built for hackathon demos with a **FastAPI** backend, **Next.js** dashboard, **SQLite** history, **JWT** auth, and **scikit-learn / XGBoost** models with **SHAP** explanations.
 
-### 🌟 Key Features
-- **Real-Time Simulation Engine**: A continuous background daemon simulating city-wide telemetry data (traffic, waste levels, incidents).
-- **Traffic Congestion AI**: Predicts traffic congestion and recommends dynamic rerouting based on historical machine learning data.
-- **Waste Overflow AI**: Monitors waste bin fill percentages and triggers immediate collection vehicles to avoid hazardous overflow.
-- **Rapid Emergency Response Layout**: Tracks active emergencies across sectors and surfaces actionable incident control insights.
-- **Interactive Tracking Map**: Integrated Leaflet capabilities marking precise problem areas, dynamically rerendering with the latest data.
+## Architecture (ASCII)
 
----
-
-## 🏗️ Architecture
-
-> **Data Transparency**: Traffic and waste signals are simulated using real-world behavioral patterns, while weather data is fetched from a live API. We simulate urban data in real time using realistic behavioral patterns, and integrate live APIs where available to demonstrate hybrid system capability.
-
-The project has evolved into a robust decoupled system:
-* **Frontend**: Modern `Next.js 14` App Router using `TailwindCSS` for gorgeous, high-fidelity responsive design. Employs `Lucide React` and `Recharts` for intuitive dataviz.
-* **Backend**: High-performance `FastAPI` (Python) acting as the main simulation core. Runs an internal asynchronous event loop simulating real city events, handling Data Engineering, and executing Scikit-Learn `.pkl` models.
-
----
-
-## 🚀 Quick Start Guide
-
-### 1. Launching the Backend (FastAPI Core)
-Ensure you have Python 3.9+ installed. From the `smart-city-allocation` directory:
-```bash
-# Activate your virtual environment
-source venv/bin/activate
-
-# Start the uvicorn server with Hot-Reload enabled
-uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-The backend initializes the Machine Learning models into memory and starts the background simulation daemon immediately on startup.
+┌─────────────┐     ┌──────────────────┐     ┌─────────────────────────────┐
+│  Next.js    │────▶│ Next Route Handlers │───▶│ FastAPI (JWT, rate limit)  │
+│  Dashboard  │     │ /api/bff/* + login  │    │ /predict /explain /system  │
+└──────┬──────┘     └──────────────────┘     └──────────────┬──────────────┘
+       │ httpOnly cookie                                      │
+       │                                                     ▼
+       │ WebSocket (optional)                         ┌──────────────┐
+       └──────────────────────────────────────────────│ SQLite DB    │
+                                                      │ city_metrics │
+                                                      │ decisions    │
+                                                      └──────────────┘
+                               ┌──────────────────────────────┐
+                               │ CSV-backed RealDataSimulator │
+                               │ traffic / waste / emergency  │
+                               └──────────────────────────────┘
+```
 
-### 2. Launching the Frontend (Next.js Dashboard)
-Open a new terminal session. From the `smart-city-allocation/frontend` directory:
+## Setup
+
+### 1. Backend
+
 ```bash
-# Install dependencies (only required once)
-npm install
+cd smart-city-allocation
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+cp .env.example .env        # set SECRET_KEY to a long random string
+pip install -r requirements.txt
+# Train models (optional if pkl already present)
+jupyter execute notebooks/train_models.ipynb   # or run cells in Jupyter
+alembic upgrade head                         # optional; init_db() also creates tables
+uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-# Start the development server
+Open API docs: `http://127.0.0.1:8000/api/docs`
+
+### 2. Frontend
+
+```bash
+cd frontend
+cp .env.local.example .env.local
+npm install
 npm run dev
 ```
-Navigate your browser to [http://localhost:3000](http://localhost:3000). The dashboard proxy is deeply integrated to bypass frontend CORS requirements securely by communicating directly with the `127.0.0.1:8000` AI endpoints!
 
----
+Visit `http://localhost:3000/login` — demo users: **admin / admin123** (full POST to predict/explain), **viewer / viewer123** (GET only).
 
-## 📂 Repository Structure
+### 3. Demo script
 
-```
-smart-city-allocation/
-├── api/                  # Python FastAPI application
-│   ├── routes/           # Endpoints for Traffic, Waste, Emergency, Map
-│   ├── services/         # Scikit-Learn ML implementations & Sim Engine
-│   └── main.py           # Application Entry Point
-├── data/                 # Raw datasets for historical contexts
-├── frontend/             # Next.js 14 Dashboard 
-│   ├── src/app/          # Core views
-│   └── src/components/   # Modular React functional components
-├── traffic_model.pkl     # Pre-trained ML weights for traffic flow
-└── waste_model.pkl       # Pre-trained ML weights for waste prediction
+```bash
+export API_URL=http://127.0.0.1:8000
+python demo/demo_script.py
 ```
 
-> **Note**: Legacy Streamlit visualization `.py` files and localized data generation pipelines were removed from the central GitHub repository to ensure a perfectly clean production environment. All AI meta-configurations reside locally and are completely untracked to keep git diffs seamless.
+## ML pipeline
+
+1. Clean CSVs: `data/traffic_clean.csv`, `waste_clean.csv`, `emergency_clean.csv`.
+2. Notebook `notebooks/train_models.ipynb` runs EDA, stratified splits, RF / GB / XGB benchmarks, saves `traffic_model.pkl`, `waste_model.pkl`, `emergency_model.pkl` and plots under `notebooks/plots/`.
+3. Inference uses **sklearn Pipelines** (`StandardScaler` + tree model) so preprocessing matches training.
+4. **SHAP** (`explainability_service.py`) uses the tree sub-estimator on transformed features.
+
+## Retraining
+
+Run the notebook end-to-end, then restart the API so `joblib` reloads pickles.
+
+## API reference (selected)
+
+| Method | Path | Auth |
+|--------|------|------|
+| POST | `/auth/token` | Public (OAuth2 form) |
+| POST | `/auth/refresh` | Refresh body |
+| GET | `/auth/me` | Bearer |
+| GET | `/health` | Public |
+| GET | `/system/decision` | Bearer |
+| POST | `/predict/traffic`, `/predict/waste` | Admin |
+| POST | `/explain/traffic`, `/explain/waste` | Admin |
+| GET | `/map-data`, `/history/trends`, `/history/full`, `/models/stats` | Bearer |
+| WS | `/ws/city-updates` | Public (demo) |
+
+## Screenshots
+
+_Add dashboard, model stats, and map screenshots here for your submission._
+
+## Team
+
+_Add your hackathon team names and roles._
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+Ensure model `.pkl` files are present or mount them as in `docker-compose.yml`.

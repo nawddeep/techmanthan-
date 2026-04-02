@@ -56,13 +56,6 @@ class Alert(BaseModel):
     timestamp: datetime
     location_id: Optional[int] = None
 
-class MapDataLocation(BaseModel):
-    location_id: int
-    coordinates: List[float]
-    traffic_intensity: str
-    waste_status: str
-    alerts_count: int
-
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -111,6 +104,10 @@ class DecisionWaste(BaseModel):
 class DecisionEmergency(BaseModel):
     type: str
     severity: str
+    worst_zone_id: Optional[int] = None
+    worst_zone_risk_score: Optional[float] = None
+    explainability: Optional[ModelExplainability] = None
+
 
 class DecisionResponse(BaseModel):
     traffic: DecisionTraffic
@@ -121,3 +118,17 @@ class DecisionResponse(BaseModel):
     data_source: str = "simulated"
     roi: ROIData
     city_health_score: float = 100.0
+
+
+class MapDataLocation(BaseModel):
+    location_id: int
+    coordinates: List[float]
+    traffic_intensity: str
+    waste_status: str
+    alerts_count: int
+    junction_name: Optional[str] = None
+    traffic_ml_label: Optional[str] = None
+    traffic_ml_probability: Optional[float] = None
+    waste_ml_label: Optional[str] = None
+    waste_ml_probability: Optional[float] = None
+    emergency_risk_score: Optional[float] = None

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from api.models.schemas import Alert, AlertLevel
+from api.models.schemas import Alert, AlertLevel, EmergencySeverity
 from api.services.simulation_service import city_state
 
 def evaluate_alerts() -> List[Alert]:
@@ -25,7 +25,9 @@ def evaluate_alerts() -> List[Alert]:
             
     for em in city_state["emergencies"]:
         alerts.append(Alert(
-            alert_type=AlertLevel.CRITICAL if em.severity == "high" else AlertLevel.WARNING,
+            alert_type=AlertLevel.CRITICAL
+            if em.severity == EmergencySeverity.HIGH
+            else AlertLevel.WARNING,
             message=f"{em.event_type.value.capitalize()} emergency reported at location {em.location_id}",
             timestamp=em.timestamp,
             location_id=em.location_id

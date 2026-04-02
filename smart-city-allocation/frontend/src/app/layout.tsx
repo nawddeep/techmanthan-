@@ -13,11 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart City Command Center — Udaipur",
-  description: "AI Decision Intelligence platform for Udaipur smart city operations.",
-  icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>",
-  },
+  title: "Smart City Command Center | Udaipur",
+  description: "AI-powered real-time city resource allocation system for traffic management, waste collection, and emergency response optimization.",
+  keywords: "smart city, AI, resource allocation, traffic management, waste management, emergency response, Udaipur",
 };
 
 export default function RootLayout({
@@ -30,6 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

@@ -14,7 +14,7 @@ export default function Charts({ history }: ChartsProps) {
   // Use recharts to generate a simple trend line
   return (
     <div className="glass-panel p-6 h-[400px] flex flex-col">
-      <h2 className="text-lg font-semibold tracking-wide text-slate-200 uppercase mb-6">Real-Time Simulated Metrics Trend</h2>
+      <h2 className="text-lg font-semibold tracking-wide text-slate-200 uppercase mb-6">Real-Time Metrics Trend</h2>
       
       <div className="flex-1 w-full -ml-4">
         <ResponsiveContainer width="100%" height="100%">

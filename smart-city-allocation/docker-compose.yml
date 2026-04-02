@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./traffic_model.pkl:/app/traffic_model.pkl:ro
+      - ./waste_model.pkl:/app/waste_model.pkl:ro
+      - ./emergency_model.pkl:/app/emergency_model.pkl:ro
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      INTERNAL_API_URL: http://backend:8000
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8000
+      NEXT_PUBLIC_WS_URL: ws://127.0.0.1:8000/ws/city-updates
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev -- --hostname 0.0.0.0"
+    depends_on:
+      - backend

@@ -1,9 +1,23 @@
-from fastapi import APIRouter
-from api.services.history_service import get_history_trends
+from datetime import datetime
+from typing import List, Optional
+
+from fastapi import APIRouter, Depends, Query
+
+from api.services.history_service import get_full_history, get_history_trends
+from api.utils.auth import get_current_user
 
 router = APIRouter(prefix="/history", tags=["History Analytics"])
 
-@router.get("/trends")
+
+@router.get("/trends", dependencies=[Depends(get_current_user)])
 def fetch_trends(limit: int = 15):
-    """Fetch historical trends for the dynamic charts."""
     return get_history_trends(limit)
+
+
+@router.get("/full", dependencies=[Depends(get_current_user)])
+def fetch_full_history(
+    limit: int = Query(100, ge=1, le=5000),
+    start: Optional[str] = None,
+    end: Optional[str] = None,
+):
+    return get_full_history(limit=limit, start=start, end=end)

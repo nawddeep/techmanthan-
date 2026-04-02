@@ -1,34 +1,83 @@
+"""Historical trends — backed by SQLite history_snapshots + city_metrics."""
 from datetime import datetime
-from collections import deque
+from typing import Any, Dict, List, Optional
 
-# Maintain a rolling window of up to 100 points in memory
-_history_logs = deque(maxlen=100)
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
 
-def append_history(traffic: float, waste: float):
-    now = datetime.now()
-    time_label = f"{now.hour:02d}:{now.minute:02d}:{now.second:02d}"
-    _history_logs.append({
-        "time": time_label,
-        "traffic": traffic,
-        "waste": waste
-    })
+from api.db.database import SessionLocal
+from api.db import models
+from api.db import persistence
 
-def get_history_trends(limit=15):
-    """
-    Returns exact required format:
-    { "timestamps": [...], "traffic": [...], "waste": [...] }
-    """
-    recent_logs = list(_history_logs)[-limit:]
-    
-    if len(recent_logs) < 5:
+
+def append_history(traffic: float, waste: float) -> None:
+    """Legacy name — persistence handled in decision_engine via persist_system_decision."""
+    if not persistence.is_db_ready():
+        return
+    # Primary path: system_decisions + history_snapshots written in persist_system_decision
+    pass
+
+
+def get_history_trends(limit: int = 15) -> Dict[str, Any]:
+    if not persistence.is_db_ready():
+        return _fallback_trends(limit)
+
+    db: Session = SessionLocal()
+    try:
+        rows = (
+            db.query(models.HistoryAggregate)
+            .order_by(desc(models.HistoryAggregate.timestamp))
+            .limit(max(limit, 5))
+            .all()
+        )
+        rows = list(reversed(rows))
+        if len(rows) < 2:
+            return _fallback_trends(limit)
         return {
-            "timestamps": ["00:00", "00:01", "00:02", "00:03", "00:04"],
-            "traffic": [50, 50, 50, 50, 50],
-            "waste": [50, 50, 50, 50, 50]
+            "timestamps": [r.timestamp.strftime("%H:%M:%S") for r in rows],
+            "traffic": [float(r.traffic) for r in rows],
+            "waste": [float(r.waste) for r in rows],
         }
-    
+    finally:
+        db.close()
+
+
+def _fallback_trends(limit: int) -> Dict[str, Any]:
     return {
-        "timestamps": [log["time"] for log in recent_logs],
-        "traffic": [log["traffic"] for log in recent_logs],
-        "waste": [log["waste"] for log in recent_logs]
+        "timestamps": ["00:00"] * 5,
+        "traffic": [50.0] * 5,
+        "waste": [50.0] * 5,
     }
+
+
+def get_full_history(
+    limit: int = 100,
+    start: Optional[str] = None,
+    end: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    if not persistence.is_db_ready():
+        return []
+
+    db: Session = SessionLocal()
+    try:
+        q = db.query(models.CityMetric).order_by(desc(models.CityMetric.timestamp))
+        if start:
+            q = q.filter(models.CityMetric.timestamp >= datetime.fromisoformat(start))
+        if end:
+            q = q.filter(models.CityMetric.timestamp <= datetime.fromisoformat(end))
+        rows = q.limit(limit).all()
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            out.append(
+                {
+                    "id": r.id,
+                    "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                    "location_id": r.location_id,
+                    "traffic_level": r.traffic_level,
+                    "waste_level": r.waste_level,
+                    "data_source": r.data_source,
+                }
+            )
+        return out
+    finally:
+        db.close()
