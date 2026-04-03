@@ -10,6 +10,8 @@ async function proxy(
   req: NextRequest,
   context: { params: Promise<{ path: string[] }> }
 ) {
+  let res: Response;
+
   const { path } = await context.params;
   const subpath = path.join("/");
   const url = `${BACKEND.replace(/\/$/, "")}/${subpath}${req.nextUrl.search}`;
@@ -28,7 +30,21 @@ async function proxy(
     init.body = await req.arrayBuffer();
   }
 
-  const res = await fetch(url, init);
+  try {
+    res = await fetch(url, init);
+  } catch (err) {
+    // Network error — backend is down or unreachable.
+    console.error("[BFF] Backend unreachable:", err);
+    return NextResponse.json(
+      {
+        error: "Backend unavailable",
+        message:
+          "The Smart City API is not reachable. Please ensure the FastAPI server is running.",
+      },
+      { status: 503 }
+    );
+  }
+
   const body = await res.arrayBuffer();
   const out = new NextResponse(body, { status: res.status });
   const contentType = res.headers.get("content-type");

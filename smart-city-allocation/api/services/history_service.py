@@ -46,13 +46,14 @@ def get_history_trends(limit: int = 15) -> Dict[str, Any]:
 
 
 def _fallback_trends(limit: int) -> Dict[str, Any]:
-    # Return 15 points by default
-    n = 15
-    base_ts = datetime.now().timestamp()
+    """Return a placeholder indicating no historical data.
+    The UI will display a friendly message instead of fabricated metrics.
+    """
     return {
-        "timestamps": [(datetime.fromtimestamp(base_ts - (n - i) * 60)).strftime("%H:%M") for i in range(n)],
-        "traffic": [45.0 + 10.0 * random.random() for _ in range(n)],
-        "waste": [30.0 + 20.0 * random.random() for _ in range(n)],
+        "timestamps": [],
+        "traffic": [],
+        "waste": [],
+        "message": "No historical data available",
     }
 
 

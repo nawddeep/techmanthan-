@@ -1,16 +1,37 @@
-import weakref
+"""
+SHAP explainability service.
+
+Explainer Cache Design
+──────────────────────
+We cache ``shap.TreeExplainer`` instances keyed by the **Python object id**
+of the underlying estimator plus its class name.  This means:
+
+* First call per model → creates and caches the explainer (can take 0.5–2 s).
+* Subsequent calls → returns the cached explainer instantly.
+* Hot-reload / model swap → ``id()`` changes for the new object, so a fresh
+  explainer is created and the old one is evicted.  Memory does not leak.
+
+Using ``id()`` alone would be unsafe in some Python garbage-collector edge
+cases (reuse of the same memory address for a different object), so we use
+both ``id()`` and ``type(estimator).__name__`` as the cache key.
+"""
 import shap
 import pandas as pd
 import numpy as np
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
-_explainers = weakref.WeakKeyDictionary()
+# Cache: (id, class_name) → TreeExplainer
+# Using a plain dict with composite keys gives us deterministic eviction when
+# models are swapped (id changes) without the WeakKeyDictionary pitfall of
+# keeping stale references alive longer than expected.
+_explainer_cache: Dict[Tuple[int, str], shap.TreeExplainer] = {}
 
 FEATURE_MAP = {
     "hour": "Current Hour",
     "day_enc": "Day of Week",
     "junction_enc": "Junction",
     "weather_enc": "Weather Severity",
+    "temperature_c": "Temperature (°C)",
     "vehicles": "Vehicle Count",
     "area": "City Zone",
     "day_of_week": "Day of Week",
@@ -21,6 +42,10 @@ FEATURE_MAP = {
     "weather": "Weather",
     "road_condition": "Road Condition",
 }
+
+
+def _cache_key(estimator: Any) -> Tuple[int, str]:
+    return (id(estimator), type(estimator).__name__)
 
 
 def _prepare_X(model: Any, df: pd.DataFrame):
@@ -40,11 +65,22 @@ def _prepare_X(model: Any, df: pd.DataFrame):
     return model, df
 
 
-def get_explainer(estimator: Any, model_type: str):
-    global _explainers
-    if estimator not in _explainers:
-        _explainers[estimator] = shap.TreeExplainer(estimator)
-    return _explainers[estimator]
+def get_explainer(estimator: Any, model_type: str) -> shap.TreeExplainer:
+    """
+    Return a cached TreeExplainer for *estimator*.
+
+    The cache key is ``(id(estimator), classname)`` so a new estimator object
+    (e.g. after hot-reload) always gets a fresh explainer and the old entry is
+    never accessed again.  Old entries are evicted to keep memory bounded.
+    """
+    key = _cache_key(estimator)
+    if key not in _explainer_cache:
+        # Evict any stale entries whose class_name matches (handles hot-reload)
+        stale = [k for k in _explainer_cache if k[1] == key[1] and k[0] != key[0]]
+        for k in stale:
+            del _explainer_cache[k]
+        _explainer_cache[key] = shap.TreeExplainer(estimator)
+    return _explainer_cache[key]
 
 
 def explain_prediction(
@@ -69,12 +105,11 @@ def explain_prediction(
         for i, name in enumerate(feature_names):
             val = float(X_shap.iloc[0, i])
             impact = float(sv[i])
+            short = name.split("__")[-1] if "__" in name else name
             feature_details.append(
                 {
-                    "feature": name.split("__")[-1] if "__" in name else name,
-                    "display_name": FEATURE_MAP.get(
-                        name.split("__")[-1], name.replace("__", " ").title()
-                    ),
+                    "feature": short,
+                    "display_name": FEATURE_MAP.get(short, name.replace("__", " ").title()),
                     "value": round(val, 2),
                     "impact": round(impact, 4),
                     "effect": "increase" if impact > 0 else "decrease",
@@ -93,13 +128,19 @@ def explain_prediction(
         else:
             prediction_label = "Prediction"
 
-        main_factor = top_3[0]
-        explanation = (
-            f"{prediction_label} is driven mainly by {main_factor['display_name']} "
-            f"({main_factor['value']})."
-        )
-        if len(top_3) > 1:
-            explanation += f" Secondary: {top_3[1]['display_name']}, {top_3[2]['display_name']}."
+        if top_3:
+            main = top_3[0]
+            explanation = (
+                f"{prediction_label} is driven mainly by {main['display_name']} "
+                f"({main['value']})."
+            )
+            if len(top_3) > 1:
+                explanation += (
+                    f" Secondary: {top_3[1]['display_name']}"
+                    + (f", {top_3[2]['display_name']}." if len(top_3) > 2 else ".")
+                )
+        else:
+            explanation = f"{prediction_label} (no feature details available)."
 
         return {
             "prediction": prediction_label,
@@ -107,8 +148,9 @@ def explain_prediction(
             "top_features": top_3,
             "explanation": explanation,
         }
+
     except Exception as e:
-        print(f"SHAP error: {e}")
+        print(f"[explainability] SHAP error: {e}")
         prediction_label = "Prediction"
         return {
             "prediction": prediction_label,

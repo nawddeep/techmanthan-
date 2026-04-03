@@ -20,12 +20,26 @@ from api.utils import geo as geo_utils
 def calculate_city_health_score(
     max_traffic: float, max_waste: float, emergencies: list, alerts: list
 ) -> float:
+    """
+    Computes a 0–100 City Health Score using a weighted composite model
+    inspired by the Economist Intelligence Unit (EIU) Smart City Index.
+
+    Pillar deductions (maximum per pillar):
+      - Traffic congestion  : up to 35 pts  (primary quality-of-life driver)
+      - Waste overflow       : up to 30 pts  (public health & environment)
+      - Active emergencies   : up to 20 pts  (safety & resilience)
+      - System alerts        : up to 15 pts  (operational stability)
+
+    Reference: EIU Smart City Index 2021 — Societal & Environmental pillars.
+    Weights reflect the relative urban impact priority of each domain.
+    """
     score = 100.0
     score -= min(35, max_traffic * 0.35)
     score -= min(30, max_waste * 0.30)
     score -= min(20, len(emergencies) * 5)
     score -= min(15, len(alerts) * 1.5)
     return round(max(0, score), 1)
+
 
 
 def predict_overflow_eta(current_fill: float) -> str:

@@ -1,7 +1,10 @@
 "use client";
-import React, { useMemo } from "react";
+
+import { useEffect } from "react";
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
+import { LatLngBounds, LatLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import React, { useMemo } from "react";
 
 interface Spot {
   location_id: number;
@@ -15,6 +18,19 @@ interface Spot {
   waste_ml_label?: string;
   waste_ml_probability?: number;
   emergency_risk_score?: number;
+}
+
+/** Auto-fits the map viewport to show all markers. */
+function FitBounds({ spots }: { spots: Spot[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!spots.length) return;
+    const bounds = new LatLngBounds(
+      spots.map((s) => new LatLng(s.coordinates[0], s.coordinates[1]))
+    );
+    map.fitBounds(bounds, { padding: [40, 40] });
+  }, [spots, map]);
+  return null;
 }
 
 export default function LiveLeafletMap({
@@ -53,13 +69,15 @@ export default function LiveLeafletMap({
     <div className="flex-1 w-full h-full rounded-xl overflow-hidden relative z-0 shadow-inner">
       <MapContainer
         center={[24.5854, 73.7125]}
-        zoom={13}
+        zoom={12}
         style={{ height: "100%", width: "100%", backgroundColor: "#0f172a" }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://carto.com/">Carto</a>'
         />
+        {/* Auto-fit to all markers once mapData loads */}
+        <FitBounds spots={mapData} />
         {colored.map((spot) => (
           <CircleMarker
             key={spot.location_id}

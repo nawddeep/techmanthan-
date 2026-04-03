@@ -75,10 +75,9 @@ async def broadcast_state(state: Dict[str, Any]) -> None:
 @router.websocket("/ws/city-updates")
 async def city_updates_ws(websocket: WebSocket):
     await websocket.accept()
-    # For demo purposes, we allow public access to city updates as per README.
-    # To re-enable security, uncomment the following lines:
-    # if not await _verify_ws_token(websocket):
-    #     return
+    # Enforce JWT authentication — reject unauthenticated WebSocket connections.
+    if not await _verify_ws_token(websocket):
+        return
     async with _lock:
         _connections.add(websocket)
     try:

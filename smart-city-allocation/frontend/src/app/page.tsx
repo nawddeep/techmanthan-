@@ -69,6 +69,15 @@ export default function Dashboard() {
   );
   const wsRef = useRef<WebSocket | null>(null);
 
+  // Seconds since the last successful backend response
+  const [nowTick, setNowTick] = useState(Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNowTick(Date.now()), 10_000);
+    return () => clearInterval(t);
+  }, []);
+  const staleSeconds = Math.floor((nowTick - lastUpdate.getTime()) / 1000);
+  const isStale = error && staleSeconds > 30;
+
   const fetchDecision = useCallback(async () => {
     try {
       const [res, mapRes, historyRes, me] = await Promise.all([
@@ -108,21 +117,40 @@ export default function Dashboard() {
 
   useEffect(() => {
     let ws: WebSocket | null = null;
-    try {
-      ws = new WebSocket(WS_URL);
-      wsRef.current = ws;
-      setWsStatus("connecting");
-      ws.onopen = () => setWsStatus("connected");
-      ws.onclose = () => setWsStatus("disconnected");
-      ws.onerror = () => setWsStatus("disconnected");
-      ws.onmessage = () => {
-        fetchDecision();
-      };
-    } catch {
-      setWsStatus("disconnected");
-    }
+    let cancelled = false;
+
+    const connect = async () => {
+      // Fetch the access_token via BFF (it's in an HttpOnly cookie, not
+      // directly readable by JS) so we can pass it to the authenticated WS.
+      let wsUrl = WS_URL;
+      try {
+        const tr = await fetch("/api/auth/ws-token");
+        if (tr.ok) {
+          const { token } = await tr.json();
+          if (token) wsUrl = `${WS_URL}?token=${encodeURIComponent(token)}`;
+        }
+      } catch {
+        // No token available — WS will be rejected; polling fallback handles data.
+      }
+
+      if (cancelled) return;
+      try {
+        ws = new WebSocket(wsUrl);
+        wsRef.current = ws;
+        setWsStatus("connecting");
+        ws.onopen = () => setWsStatus("connected");
+        ws.onclose = () => setWsStatus("disconnected");
+        ws.onerror = () => setWsStatus("disconnected");
+        ws.onmessage = () => { fetchDecision(); };
+      } catch {
+        setWsStatus("disconnected");
+      }
+    };
+
+    connect();
     const poll = setInterval(() => fetchDecision(), 5000);
     return () => {
+      cancelled = true;
       clearInterval(poll);
       ws?.close();
     };
@@ -198,6 +226,18 @@ export default function Dashboard() {
             <RefreshCw className={`w-4 h-4 ${!error && "animate-spin-slow duration-[3000ms]"}`} />
             <span>{error ? "CONNECTION LOST" : "SYSTEM ONLINE"}</span>
           </div>
+          {/* Stale data warning — shows when connection has been lost for >30s */}
+          {isStale && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-bold uppercase tracking-widest">
+              <Clock className="w-3.5 h-3.5" />
+              <span>
+                Stale — last update{" "}
+                {staleSeconds < 60
+                  ? `${staleSeconds}s ago`
+                  : `${Math.floor(staleSeconds / 60)}m ago`}
+              </span>
+            </div>
+          )}
         </div>
       </header>
 
@@ -221,8 +261,9 @@ export default function Dashboard() {
           <p className="mt-2 text-slate-400">Ensure the API is running.</p>
         </div>
       ) : (
-        <ErrorBoundary fallbackText="Something went wrong">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <ErrorBoundary fallbackText="Something went wrong" onRetry={fetchDecision}>
+          {/* Grey out the entire KPI grid when data is stale (connection lost) */}
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 transition-opacity duration-500 ${isStale ? "opacity-50 pointer-events-none" : ""}`}>
             {!data ? (
               <div className="glass-panel h-32 flex flex-col justify-between animate-pulse bg-slate-800/40 p-6">
                 <div className="h-3 bg-slate-700/50 rounded w-1/3" />
@@ -311,7 +352,7 @@ export default function Dashboard() {
             )}
 
             <div id="decision-section" className="col-span-1 md:col-span-2 xl:col-span-3">
-              <ErrorBoundary fallbackText="Decision Panel Error">
+              <ErrorBoundary fallbackText="Decision Panel Error" onRetry={fetchDecision}>
                 <DecisionPanel actions={data?.actions || []} />
               </ErrorBoundary>
             </div>

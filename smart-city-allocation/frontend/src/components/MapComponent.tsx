@@ -1,20 +1,17 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Loader2 } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import { useState } from "react";
 
-const Map = dynamic(
-  () => import("./LiveLeafletMap"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex-1 w-full h-full flex items-center justify-center rounded-xl bg-slate-900/50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      </div>
-    ),
-  }
-);
+const Map = dynamic(() => import("./LiveLeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 w-full h-full flex items-center justify-center rounded-xl bg-slate-900/50">
+      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+    </div>
+  ),
+});
 
 interface MapDataLocation {
   location_id: number;
@@ -30,8 +27,16 @@ interface MapDataLocation {
   emergency_risk_score?: number;
 }
 
-export default function MapComponent({ mapData }: { mapData: MapDataLocation[] }) {
+export default function MapComponent({
+  mapData,
+}: {
+  mapData: MapDataLocation[];
+}) {
   const [heatmap, setHeatmap] = useState(false);
+
+  // Map is ready only once we have at least one marker from the backend
+  const isLoading = mapData.length === 0;
+
   return (
     <div className="glass-panel p-6 h-[400px] flex flex-col relative overflow-hidden">
       <div className="flex justify-between items-center mb-4 z-10">
@@ -44,25 +49,44 @@ export default function MapComponent({ mapData }: { mapData: MapDataLocation[] }
             checked={heatmap}
             onChange={(e) => setHeatmap(e.target.checked)}
             className="rounded border-slate-600"
+            disabled={isLoading}
           />
           Emergency heat layer
         </label>
       </div>
-      <Map mapData={mapData} heatmapMode={heatmap} />
-      <div className="absolute bottom-6 left-6 bg-slate-900/90 p-3 rounded-lg border border-slate-700 backdrop-blur-md z-[1000] text-[10px] font-bold tracking-wider uppercase shadow-xl">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
-          <span className="text-slate-300">Low / ML ok</span>
+
+      {/* Loading overlay shown until real markers arrive */}
+      {isLoading ? (
+        <div className="flex-1 w-full h-full flex flex-col items-center justify-center rounded-xl bg-slate-900/50 gap-3">
+          <MapPin className="w-8 h-8 text-blue-500/60 animate-bounce" />
+          <p className="text-slate-400 text-sm font-medium animate-pulse">
+            Loading city data…
+          </p>
+          <p className="text-slate-600 text-xs">
+            Waiting for simulation data from backend
+          </p>
         </div>
-        <div className="flex items-center gap-2 mb-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]" />
-          <span className="text-slate-300">Medium risk</span>
+      ) : (
+        <Map mapData={mapData} heatmapMode={heatmap} />
+      )}
+
+      {/* Legend — only show when map is visible */}
+      {!isLoading && (
+        <div className="absolute bottom-6 left-6 bg-slate-900/90 p-3 rounded-lg border border-slate-700 backdrop-blur-md z-[1000] text-[10px] font-bold tracking-wider uppercase shadow-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+            <span className="text-slate-300">Low / ML ok</span>
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.6)]" />
+            <span className="text-slate-300">Medium risk</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
+            <span className="text-slate-300">High (ML / congestion)</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
-          <span className="text-slate-300">High (ML / congestion)</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
