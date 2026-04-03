@@ -1,5 +1,6 @@
 import time
-import requests
+import httpx
+import asyncio
 
 # Cache structure: { "weather": {"data": ..., "timestamp": ...}, "traffic": ... }
 _cache = {
@@ -8,7 +9,7 @@ _cache = {
 }
 CACHE_TTL = 300  # 5 minutes in seconds
 
-def fetch_weather_data(lat: float, lon: float):
+async def fetch_weather_data(lat: float, lon: float):
     global _cache
     current_time = time.time()
     
@@ -19,9 +20,10 @@ def fetch_weather_data(lat: float, lon: float):
     try:
         # Open-Meteo free API point
         url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
-        response = requests.get(url, timeout=1)
-        response.raise_for_status()
-        data = response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, timeout=5.0)
+            response.raise_for_status()
+            data = response.json()
         
         weather_code = data.get("current_weather", {}).get("weathercode", 0)
         # Simplify weather for our ML model (0: Clear, 1: Rain, 2: Storm)
@@ -40,7 +42,7 @@ def fetch_weather_data(lat: float, lon: float):
         return {"data": {"weather_enc": 0}, "source": "simulated"}
 
 
-def fetch_traffic_data(lat: float, lon: float):
+async def fetch_traffic_data(lat: float, lon: float):
     """
     Traffic data integration using time-series modeling based on urban patterns.
     Supports external API integration with intelligent fallback handling.
@@ -68,7 +70,7 @@ def fetch_traffic_data(lat: float, lon: float):
              return {"data": _cache["traffic"]["data"], "source": "cached"}
         return {"data": {"congestion_factor": 0.5}, "source": "simulated"}
 
-def get_integrated_data():
+async def get_integrated_data():
     """
     Aggregates external data to build a unified system context.
     Determines the overall data source credibility.
@@ -76,8 +78,8 @@ def get_integrated_data():
     # Udaipur coordinates roughly
     lat, lon = 24.5854, 73.7125 
     
-    weather_info = fetch_weather_data(lat, lon)
-    traffic_info = fetch_traffic_data(lat, lon)
+    weather_info = await fetch_weather_data(lat, lon)
+    traffic_info = await fetch_traffic_data(lat, lon)
     
     sources = [weather_info["source"], traffic_info["source"]]
     if "simulated" in sources:

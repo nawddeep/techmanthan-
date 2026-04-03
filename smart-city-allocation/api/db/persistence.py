@@ -13,6 +13,9 @@ _db_ok = False
 
 def is_db_ready() -> bool:
     global _db_ok
+    if not _db_ok:
+        # Auto-check if we haven't marked as ready yet
+        _db_ok = ping_db()
     return _db_ok
 
 

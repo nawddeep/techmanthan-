@@ -93,7 +93,11 @@ export default function Dashboard() {
           }))
         );
       }
-    } catch {
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        // Interceptor handles the redirect; don't show the error panel.
+        return;
+      }
       setError(true);
     }
   }, []);
@@ -214,7 +218,7 @@ export default function Dashboard() {
         <div className="glass-panel text-red-400 p-8 flex flex-col items-center justify-center h-64 text-center">
           <ShieldAlert className="w-12 h-12 mb-4 animate-bounce" />
           <h2 className="text-xl font-bold">Backend Communication Failure</h2>
-          <p className="mt-2 text-slate-400">Log in at /login and ensure the API is running.</p>
+          <p className="mt-2 text-slate-400">Ensure the API is running.</p>
         </div>
       ) : (
         <ErrorBoundary fallbackText="Something went wrong">

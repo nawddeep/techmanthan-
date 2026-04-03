@@ -14,6 +14,7 @@ from api.services.cost_analysis_service import calculate_costs
 from api.services.emergency_ml_service import explain_emergency, predict_emergency_risk
 from api.services.ml_service import get_traffic_explanation, get_waste_explanation
 from api.services.simulation_service import get_current_state
+from api.utils import geo as geo_utils
 
 
 def calculate_city_health_score(
@@ -106,12 +107,12 @@ def generate_decisions() -> DecisionResponse:
     tr = state.get("traffic_row", {}).get(worst_traffic_loc) or {
         "hour": now.hour,
         "day_enc": now.weekday(),
-        "junction_enc": (worst_traffic_loc - 1) % 8,
+        "junction_enc": geo_utils.get_junction_id(worst_traffic_loc),
         "weather_enc": weather_enc,
         "vehicles": int((max_traffic / 100) * 400),
     }
     wr = state.get("waste_row", {}).get(worst_waste_loc) or {
-        "area": (worst_waste_loc - 1) % 8,
+        "area": geo_utils.get_area_id(worst_waste_loc),
         "day_of_week": now.weekday(),
         "population_density": 3500.0,
         "last_collection_days": 3,
@@ -145,7 +146,7 @@ def generate_decisions() -> DecisionResponse:
     em_explain = None
     rc = 1 if state.get("data_source") == "real_data" else 0
     for loc in range(1, 11):
-        zone = (loc - 1) % 5
+        zone = geo_utils.get_zone_id(loc)
         risk, high, conf = predict_emergency_risk(
             zone, now.hour, now.weekday(), weather_enc, rc
         )
@@ -154,7 +155,7 @@ def generate_decisions() -> DecisionResponse:
             worst_zone = loc
             worst_high = high
 
-    wz = (worst_zone - 1) % 5
+    wz = geo_utils.get_zone_id(worst_zone)
     _, _, wconf = predict_emergency_risk(
         wz, now.hour, now.weekday(), weather_enc, rc
     )

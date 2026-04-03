@@ -18,9 +18,11 @@ def append_history(traffic: float, waste: float) -> None:
     pass
 
 
+import random
+
 def get_history_trends(limit: int = 15) -> Dict[str, Any]:
     if not persistence.is_db_ready():
-        return _fallback_trends(limit)
+        return {**_fallback_trends(limit), "is_fallback": True}
 
     db: Session = SessionLocal()
     try:
@@ -32,21 +34,25 @@ def get_history_trends(limit: int = 15) -> Dict[str, Any]:
         )
         rows = list(reversed(rows))
         if len(rows) < 2:
-            return _fallback_trends(limit)
+            return {**_fallback_trends(limit), "is_fallback": True}
         return {
             "timestamps": [r.timestamp.strftime("%H:%M:%S") for r in rows],
             "traffic": [float(r.traffic) for r in rows],
             "waste": [float(r.waste) for r in rows],
+            "is_fallback": False,
         }
     finally:
         db.close()
 
 
 def _fallback_trends(limit: int) -> Dict[str, Any]:
+    # Return 15 points by default
+    n = 15
+    base_ts = datetime.now().timestamp()
     return {
-        "timestamps": ["00:00"] * 5,
-        "traffic": [50.0] * 5,
-        "waste": [50.0] * 5,
+        "timestamps": [(datetime.fromtimestamp(base_ts - (n - i) * 60)).strftime("%H:%M") for i in range(n)],
+        "traffic": [45.0 + 10.0 * random.random() for _ in range(n)],
+        "waste": [30.0 + 20.0 * random.random() for _ in range(n)],
     }
 
 

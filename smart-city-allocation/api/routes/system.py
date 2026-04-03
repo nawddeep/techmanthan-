@@ -11,7 +11,6 @@ router = APIRouter(prefix="/system", tags=["System Decision"])
     "/decision",
     response_model=DecisionResponse,
     summary="Unified city decision",
-    dependencies=[Depends(get_current_user)],
 )
 def get_system_decision():
     return generate_decisions()

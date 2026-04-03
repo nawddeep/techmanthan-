@@ -1,9 +1,10 @@
+import weakref
 import shap
 import pandas as pd
 import numpy as np
 from typing import Any, Dict, List
 
-_explainers = {}
+_explainers = weakref.WeakKeyDictionary()
 
 FEATURE_MAP = {
     "hour": "Current Hour",
@@ -41,10 +42,9 @@ def _prepare_X(model: Any, df: pd.DataFrame):
 
 def get_explainer(estimator: Any, model_type: str):
     global _explainers
-    key = f"{model_type}_{id(estimator)}"
-    if key not in _explainers:
-        _explainers[key] = shap.TreeExplainer(estimator)
-    return _explainers[key]
+    if estimator not in _explainers:
+        _explainers[estimator] = shap.TreeExplainer(estimator)
+    return _explainers[estimator]
 
 
 def explain_prediction(

@@ -5,7 +5,9 @@ import asyncio
 import json
 from typing import Any, Dict, List, Set
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, status
+from jose import JWTError, jwt
+from api.utils.auth import ALGORITHM, SECRET_KEY
 
 from api.services.simulation_service import get_current_state
 
@@ -13,6 +15,22 @@ router = APIRouter(tags=["WebSocket"])
 
 _connections: Set[WebSocket] = set()
 _lock = asyncio.Lock()
+
+
+async def _verify_ws_token(websocket: WebSocket) -> bool:
+    token = websocket.query_params.get("token")
+    if not token:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return False
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("type") != "access":
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return False
+        return True
+    except JWTError:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return False
 
 
 def _serialize_state(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -57,6 +75,10 @@ async def broadcast_state(state: Dict[str, Any]) -> None:
 @router.websocket("/ws/city-updates")
 async def city_updates_ws(websocket: WebSocket):
     await websocket.accept()
+    # For demo purposes, we allow public access to city updates as per README.
+    # To re-enable security, uncomment the following lines:
+    # if not await _verify_ws_token(websocket):
+    #     return
     async with _lock:
         _connections.add(websocket)
     try:

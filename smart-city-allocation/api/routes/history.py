@@ -9,12 +9,12 @@ from api.utils.auth import get_current_user
 router = APIRouter(prefix="/history", tags=["History Analytics"])
 
 
-@router.get("/trends", dependencies=[Depends(get_current_user)])
+@router.get("/trends")
 def fetch_trends(limit: int = 15):
     return get_history_trends(limit)
 
 
-@router.get("/full", dependencies=[Depends(get_current_user)])
+@router.get("/full")
 def fetch_full_history(
     limit: int = Query(100, ge=1, le=5000),
     start: Optional[str] = None,

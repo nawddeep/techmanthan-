@@ -8,6 +8,7 @@ from api.services.emergency_ml_service import predict_emergency_risk
 from api.services.ml_service import predict_traffic, predict_waste
 from api.services.simulation_service import get_current_state
 from api.utils.auth import get_current_user
+from api.utils import geo as geo_utils
 
 router = APIRouter(prefix="/map-data", tags=["Map Data"])
 
@@ -26,7 +27,7 @@ LOCATION_META = {
 }
 
 
-@router.get("", response_model=List[MapDataLocation], dependencies=[Depends(get_current_user)])
+@router.get("", response_model=List[MapDataLocation])
 def get_map_data():
     import datetime
 
@@ -45,13 +46,14 @@ def get_map_data():
             tr = {
                 "hour": now.hour,
                 "day_enc": now.weekday(),
-                "junction_enc": (loc_id - 1) % 8,
+                "junction_enc": geo_utils.get_junction_id(loc_id),
                 "weather_enc": weather_enc,
+                "temperature_c": 25.0,
                 "vehicles": 200,
             }
         if not wr:
             wr = {
-                "area": (loc_id - 1) % 8,
+                "area": geo_utils.get_area_id(loc_id),
                 "day_of_week": now.weekday(),
                 "population_density": 3000.0,
                 "last_collection_days": 3,
@@ -63,6 +65,7 @@ def get_map_data():
             day_enc=int(tr["day_enc"]),
             junction_enc=int(tr["junction_enc"]),
             weather_enc=int(tr["weather_enc"]),
+            temperature_c=float(tr.get("temperature_c", 25.0)),
             vehicles=int(tr["vehicles"]),
         )
         w_req = WastePredictionRequest(
@@ -84,7 +87,7 @@ def get_map_data():
 
         loc_alerts = sum(1 for a in alerts if getattr(a, "location_id", None) == loc_id)
 
-        zone = (loc_id - 1) % 5
+        zone = geo_utils.get_zone_id(loc_id)
         erisk, _, _ = predict_emergency_risk(zone, now.hour, now.weekday(), weather_enc, rc)
 
         out.append(

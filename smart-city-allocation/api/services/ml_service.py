@@ -6,6 +6,7 @@ from api.models.schemas import (
     WastePredictionRequest, WastePredictionResponse,
     ModelExplainability
 )
+from api.models.ml_constants import TRAFFIC_FEATURES, WASTE_FEATURES
 from api.services.explainability_service import explain_prediction
 
 _traffic_model = None
@@ -32,13 +33,15 @@ def predict_traffic(req: TrafficPredictionRequest) -> TrafficPredictionResponse:
         return TrafficPredictionResponse(
             congestion_level="low", numeric_score=0.1, suggested_action="Monitor"
         )
-    df = pd.DataFrame([{
+    data = {
         'hour': req.hour,
         'day_enc': req.day_enc,
         'junction_enc': req.junction_enc,
         'weather_enc': req.weather_enc,
+        'temperature_c': req.temperature_c,
         'vehicles': req.vehicles
-    }])
+    }
+    df = pd.DataFrame([data])[TRAFFIC_FEATURES]
     pred = _traffic_model.predict(df)[0]
     prob = _traffic_model.predict_proba(df)[0].max()
     
@@ -56,13 +59,14 @@ def predict_waste(req: WastePredictionRequest) -> WastePredictionResponse:
         return WastePredictionResponse(
             overflow_risk="low", priority_level="Low", numeric_score=0.1, optimized_collection_suggestion="Routine"
         )
-    df = pd.DataFrame([{
+    data = {
         'area': req.area,
         'day_of_week': req.day_of_week,
         'population_density': req.population_density,
         'last_collection_days': req.last_collection_days,
         'bin_fill_pct': req.bin_fill_pct
-    }])
+    }
+    df = pd.DataFrame([data])[WASTE_FEATURES]
     pred = _waste_model.predict(df)[0]
     prob = _waste_model.predict_proba(df)[0].max()
     
@@ -81,25 +85,28 @@ def predict_waste(req: WastePredictionRequest) -> WastePredictionResponse:
 def get_traffic_explanation(req: TrafficPredictionRequest, prob: float, pred: int):
     if not _traffic_model:
         return None
-    df = pd.DataFrame([{
+    data = {
         'hour': req.hour,
         'day_enc': req.day_enc,
         'junction_enc': req.junction_enc,
         'weather_enc': req.weather_enc,
+        'temperature_c': req.temperature_c,
         'vehicles': req.vehicles
-    }])
+    }
+    df = pd.DataFrame([data])[TRAFFIC_FEATURES]
     exp_dict = explain_prediction(_traffic_model, df, "traffic", prob, pred)
     return ModelExplainability(**exp_dict)
 
 def get_waste_explanation(req: WastePredictionRequest, prob: float, pred: int):
     if not _waste_model:
         return None
-    df = pd.DataFrame([{
+    data = {
         'area': req.area,
         'day_of_week': req.day_of_week,
         'population_density': req.population_density,
         'last_collection_days': req.last_collection_days,
         'bin_fill_pct': req.bin_fill_pct
-    }])
+    }
+    df = pd.DataFrame([data])[WASTE_FEATURES]
     exp_dict = explain_prediction(_waste_model, df, "waste", prob, pred)
     return ModelExplainability(**exp_dict)

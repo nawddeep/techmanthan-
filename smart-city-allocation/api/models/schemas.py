@@ -23,6 +23,7 @@ class TrafficPredictionRequest(BaseModel):
     day_enc: int
     junction_enc: int
     weather_enc: int
+    temperature_c: float = 25.0  # Default temperature
     vehicles: int
 
 class WastePredictionRequest(BaseModel):

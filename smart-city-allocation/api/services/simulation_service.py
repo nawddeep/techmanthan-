@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 
 from api.models.schemas import EmergencySeverity, EmergencyEvent, EventType
+from api.utils import geo as geo_utils
 
 # --- Paths ---
 _BASE = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -59,10 +60,10 @@ class RealDataSimulator:
             i: deque(maxlen=self.WINDOW) for i in range(1, self.N_LOC + 1)
         }
 
-        # Junction id in clean data is 0..7 — map location 1..10
-        self._loc_to_junction = {i: (i - 1) % 8 for i in range(1, self.N_LOC + 1)}
-        self._loc_to_area = {i: (i - 1) % 8 for i in range(1, self.N_LOC + 1)}
-        self._loc_to_zone = {i: (i - 1) % 5 for i in range(1, self.N_LOC + 1)}  # emergency zones 0-4
+        # Map location 1..10 using centralized geo_utils
+        self._loc_to_junction = {i: geo_utils.get_junction_id(i) for i in range(1, self.N_LOC + 1)}
+        self._loc_to_area = {i: geo_utils.get_area_id(i) for i in range(1, self.N_LOC + 1)}
+        self._loc_to_zone = {i: geo_utils.get_zone_id(i) for i in range(1, self.N_LOC + 1)}
 
         self._traffic_idx: Dict[int, np.ndarray] = {}
         for loc, junc in self._loc_to_junction.items():
@@ -221,12 +222,12 @@ class StatisticalSimulator:
             state["traffic_row"][loc] = {
                 "hour": datetime.now().hour,
                 "day_enc": datetime.now().weekday(),
-                "junction_enc": (loc - 1) % 8,
+                "junction_enc": geo_utils.get_junction_id(loc),
                 "weather_enc": 0,
                 "vehicles": 200,
             }
             state["waste_row"][loc] = {
-                "area": (loc - 1) % 8,
+                "area": geo_utils.get_area_id(loc),
                 "day_of_week": datetime.now().weekday(),
                 "population_density": 3000.0,
                 "last_collection_days": 3,
@@ -298,10 +299,10 @@ def _init_engine() -> None:
 _init_engine()
 
 
-def update_city_state() -> None:
+async def update_city_state() -> None:
     from api.services.external_data_service import get_integrated_data
 
-    ext = get_integrated_data()
+    ext = await get_integrated_data()
     weather_enc = int(ext.get("weather_enc", 0))
     _engine.tick(weather_enc)
 
@@ -309,7 +310,7 @@ def update_city_state() -> None:
 async def run_simulation() -> None:
     while True:
         try:
-            update_city_state()
+            await update_city_state()
             try:
                 from api.db import persistence  # noqa: WPS433
 

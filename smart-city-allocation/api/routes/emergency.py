@@ -9,7 +9,7 @@ from api.utils.auth import get_current_user
 router = APIRouter(prefix="/emergency", tags=["Emergency"])
 
 
-@router.get("", response_model=List[EmergencyEvent], dependencies=[Depends(get_current_user)])
+@router.get("", response_model=List[EmergencyEvent])
 def get_emergencies():
     state = get_current_state()
     return state["emergencies"]

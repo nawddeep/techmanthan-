@@ -9,10 +9,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (r) => r,
   (err) => {
-    if (typeof window !== "undefined" && err.response?.status === 401) {
-      const p = window.location.pathname;
-      if (!p.startsWith("/login")) window.location.href = "/login";
-    }
+    // No authentication redirect - open access
     return Promise.reject(err);
   }
 );

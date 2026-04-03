@@ -35,24 +35,23 @@ class UserOut(BaseModel):
     role: str
 
 
-_demo_users: Optional[Dict[str, Dict[str, Any]]] = None
+# Pre-computed password hashes to avoid bcrypt initialization issues
+# Generated using bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+_demo_users: Dict[str, Dict[str, Any]] = {
+    "admin": {
+        "username": "admin",
+        "hashed_password": "$2b$12$HUIPRwbt3/F7HKZ6O33kCuTstA9J3ET8pUgNT.Fn0bDN9jTytGeoa",  # admin123
+        "role": "admin",
+    },
+    "viewer": {
+        "username": "viewer",
+        "hashed_password": "$2b$12$Ji4XEGtPqS2ELDb78B0PLu8f9ru96.mJQulYwyp28JTARUBJUCifu",  # viewer123
+        "role": "viewer",
+    },
+}
 
 
 def _get_users() -> Dict[str, Dict[str, Any]]:
-    global _demo_users
-    if _demo_users is None:
-        _demo_users = {
-            "admin": {
-                "username": "admin",
-                "hashed_password": get_password_hash("admin123"),
-                "role": "admin",
-            },
-            "viewer": {
-                "username": "viewer",
-                "hashed_password": get_password_hash("viewer123"),
-                "role": "viewer",
-            },
-        }
     return _demo_users
 
 
