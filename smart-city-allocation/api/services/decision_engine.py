@@ -12,9 +12,23 @@ from api.models.schemas import (
 from api.services.alert_service import evaluate_alerts
 from api.services.cost_analysis_service import calculate_costs
 from api.services.emergency_ml_service import explain_emergency, predict_emergency_risk
-from api.services.ml_service import get_traffic_explanation, get_waste_explanation
+from api.services.ml_service import get_traffic_explanation, get_waste_explanation, predict_traffic, predict_waste
 from api.services.simulation_service import get_current_state
 from api.utils import geo as geo_utils
+
+# Location ID to junction name mapping (from map_data.py)
+LOCATION_NAMES = {
+    1: "Pratap Nagar",
+    2: "Sector 11 Chauraha",
+    3: "Madhuban",
+    4: "Hiran Magri",
+    5: "Bedla Road",
+    6: "Surajpol",
+    7: "Bhupalpura",
+    8: "Delhi Gate",
+    9: "Pratap Nagar Sec-2",
+    10: "Madhuban Chauraha",
+}
 
 
 def calculate_city_health_score(
@@ -91,26 +105,6 @@ def generate_decisions() -> DecisionResponse:
             if sev == "high":
                 break
 
-    actions: List[str] = []
-
-    if max_traffic > 85:
-        actions.append("Deploy traffic police at heavily congested junctions.")
-    elif max_traffic >= 60:
-        actions.append("Optimize traffic signals to improve flow.")
-
-    if max_waste > 90:
-        actions.append("Send immediate waste collection vehicle to critical zones.")
-    elif max_waste >= 70:
-        actions.append("Schedule waste collection for high-risk areas in next cycle.")
-
-    if e_sev == "High":
-        actions.append(f"Dispatch nearest emergency response unit immediately for {e_type}.")
-    elif e_sev == "Medium":
-        actions.append(f"Monitor {e_type} emergency and prepare response units.")
-
-    if not actions:
-        actions.append("Maintain routine city operations.")
-
     now = datetime.datetime.now()
     weather_enc = int(state.get("weather_enc", 0))
 
@@ -133,16 +127,39 @@ def generate_decisions() -> DecisionResponse:
         "bin_fill_pct": max_waste,
     }
 
+    actions: List[str] = []
+
+    # Get ML predictions for traffic at worst location
     t_req = TrafficPredictionRequest(
         hour=int(tr["hour"]),
         day_enc=int(tr["day_enc"]),
         junction_enc=int(tr["junction_enc"]),
         weather_enc=int(tr["weather_enc"]),
+        temperature_c=float(tr.get("temperature_c", 25.0)),
         vehicles=int(tr["vehicles"]),
     )
-    t_pred = 1 if max_traffic >= 60 else 0
-    t_exp = get_traffic_explanation(t_req, max_traffic / 100, t_pred)
+    traffic_ml_pred = predict_traffic(t_req)
+    traffic_ml_confidence = traffic_ml_pred.numeric_score * 100  # Convert to percentage
+    
+    # Confidence-weighted traffic decisions
+    # Only act when BOTH raw level is high AND ML confidence exceeds 65%
+    if max_traffic > 85 and traffic_ml_confidence >= 65:
+        location_name = LOCATION_NAMES.get(worst_traffic_loc, f"Location {worst_traffic_loc}")
+        actions.append(
+            f"Deploy traffic police at {location_name} (ML confidence: {traffic_ml_confidence:.0f}%)"
+        )
+    elif max_traffic >= 60 and traffic_ml_confidence >= 65:
+        location_name = LOCATION_NAMES.get(worst_traffic_loc, f"Location {worst_traffic_loc}")
+        actions.append(
+            f"Optimize traffic signals at {location_name} (ML confidence: {traffic_ml_confidence:.0f}%)"
+        )
+    elif max_traffic > 85:
+        # High traffic but low ML confidence - monitor only
+        actions.append(
+            f"Monitor traffic conditions (ML confidence low: {traffic_ml_confidence:.0f}%)"
+        )
 
+    # Get ML predictions for waste at worst location
     w_req = WastePredictionRequest(
         area=int(wr["area"]),
         day_of_week=int(wr["day_of_week"]),
@@ -150,8 +167,38 @@ def generate_decisions() -> DecisionResponse:
         last_collection_days=int(wr["last_collection_days"]),
         bin_fill_pct=float(wr["bin_fill_pct"]),
     )
-    w_pred = 1 if max_waste >= 70 else 0
-    w_exp = get_waste_explanation(w_req, max_waste / 100, w_pred)
+    waste_ml_pred = predict_waste(w_req)
+    waste_ml_confidence = waste_ml_pred.numeric_score * 100
+    
+    # Confidence-weighted waste decisions
+    if max_waste > 90 and waste_ml_confidence >= 65:
+        actions.append(
+            f"Send immediate waste collection vehicle to critical zones (ML confidence: {waste_ml_confidence:.0f}%)"
+        )
+    elif max_waste >= 70 and waste_ml_confidence >= 65:
+        actions.append(
+            f"Schedule waste collection for high-risk areas in next cycle (ML confidence: {waste_ml_confidence:.0f}%)"
+        )
+    elif max_waste > 90:
+        # High waste but low ML confidence
+        actions.append(
+            f"Monitor waste levels (ML confidence low: {waste_ml_confidence:.0f}%)"
+        )
+
+    if e_sev == "High":
+        actions.append(f"Dispatch nearest emergency response unit immediately for {e_type}.")
+    elif e_sev == "Medium":
+        actions.append(f"Monitor {e_type} emergency and prepare response units.")
+
+    if not actions:
+        actions.append("Maintain routine city operations.")
+
+    # Get explanations using the same requests we used for predictions
+    t_pred = 1 if traffic_ml_pred.congestion_level == "high" else 0
+    t_exp = get_traffic_explanation(t_req, traffic_ml_confidence / 100, t_pred)
+
+    w_pred = 1 if waste_ml_pred.overflow_risk == "high" else 0
+    w_exp = get_waste_explanation(w_req, waste_ml_confidence / 100, w_pred)
 
     # Emergency ML for all 10 zones (zone index 0-4 wraps)
     worst_zone = 1

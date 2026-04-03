@@ -49,16 +49,13 @@ def create_refresh_token(data: Dict[str, Any]) -> str:
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-async def get_token_from_header(token: Optional[str] = Depends(oauth2_scheme)) -> str:
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
     if not token:
-        # Bypassing auth for demo as per user request
-        return "bypass_token"
-    return token
-
-
-async def get_current_user(token: str = Depends(get_token_from_header)) -> Dict[str, Any]:
-    if token == "bypass_token":
-        return {"username": "admin", "role": "admin"}
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

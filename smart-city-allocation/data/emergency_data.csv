@@ -1,301 +1,301 @@
 zone,hour,day_of_week,weather,road_condition,incident_count,risk_score,high_risk
-City Station Zone,4,2,Clear,Fair,4,2.9,0
-Hiran Magri Zone,1,5,Cloudy,Fair,2,1.4,0
-City Station Zone,18,3,Clear,Fair,3,2.1,0
-Bhupalpura Zone,23,1,Cloudy,Poor,4,2.9,0
-Bhupalpura Zone,19,5,Cloudy,Poor,5,3.6,0
-Airport Zone,1,3,Cloudy,Good,3,2.1,0
-Bhupalpura Zone,1,0,Clear,Fair,6,4.3,0
-Bhupalpura Zone,21,0,Cloudy,Good,2,1.4,0
-Bhupalpura Zone,23,1,Sunny,Poor,7,5.0,0
-Hiran Magri Zone,22,3,Cloudy,Good,6,4.3,0
-Airport Zone,19,0,Clear,Poor,3,2.1,0
-Delhi Gate Zone,17,6,Clear,Fair,2,1.4,0
-Airport Zone,19,5,Sunny,Good,0,0.0,0
-Airport Zone,20,4,Rainy,Good,6,4.3,0
-Airport Zone,13,3,Sunny,Good,0,0.0,0
-City Station Zone,14,1,Sunny,Good,3,2.1,0
-Delhi Gate Zone,11,3,Clear,Fair,1,0.7,0
-City Station Zone,10,2,Cloudy,Poor,5,3.6,0
-Hiran Magri Zone,10,2,Cloudy,Poor,2,1.4,0
-Hiran Magri Zone,6,0,Rainy,Fair,7,5.0,0
-Sukhadia Circle Zone,11,2,Rainy,Poor,9,6.4,1
-Sukhadia Circle Zone,15,1,Rainy,Good,3,2.1,0
-Hiran Magri Zone,4,0,Rainy,Fair,4,2.9,0
-Hiran Magri Zone,1,1,Sunny,Poor,7,5.0,0
-City Station Zone,21,5,Sunny,Fair,0,0.0,0
-Hiran Magri Zone,15,1,Cloudy,Fair,3,2.1,0
-Delhi Gate Zone,22,2,Sunny,Poor,10,7.1,1
-City Station Zone,14,5,Cloudy,Poor,3,2.1,0
-Hiran Magri Zone,10,2,Cloudy,Fair,1,0.7,0
-City Station Zone,5,1,Cloudy,Fair,1,0.7,0
-City Station Zone,12,2,Cloudy,Poor,5,3.6,0
-Bhupalpura Zone,18,2,Clear,Fair,0,0.0,0
-Sukhadia Circle Zone,9,2,Cloudy,Poor,6,4.3,0
-City Station Zone,23,3,Sunny,Fair,4,2.9,0
-Airport Zone,18,5,Sunny,Fair,0,0.0,0
-City Station Zone,4,5,Sunny,Fair,3,2.1,0
-Airport Zone,20,6,Sunny,Poor,3,2.1,0
-Bhupalpura Zone,6,5,Clear,Good,1,0.7,0
-Hiran Magri Zone,10,6,Rainy,Poor,10,7.1,1
-City Station Zone,13,1,Rainy,Fair,3,2.1,0
-Bhupalpura Zone,22,6,Cloudy,Good,4,2.9,0
-Delhi Gate Zone,20,6,Cloudy,Good,4,2.9,0
-Bhupalpura Zone,15,4,Sunny,Fair,1,0.7,0
-Sukhadia Circle Zone,17,1,Sunny,Poor,4,2.9,0
-Sukhadia Circle Zone,20,5,Rainy,Good,7,5.0,0
-Hiran Magri Zone,22,0,Rainy,Good,7,5.0,0
-Airport Zone,22,2,Sunny,Poor,8,5.7,0
-Hiran Magri Zone,3,2,Cloudy,Poor,6,4.3,0
-Airport Zone,0,4,Clear,Good,4,2.9,0
-Airport Zone,21,0,Clear,Poor,2,1.4,0
-Airport Zone,14,3,Rainy,Good,6,4.3,0
-Airport Zone,13,6,Rainy,Fair,6,4.3,0
-Sukhadia Circle Zone,18,1,Rainy,Poor,11,7.9,1
-Sukhadia Circle Zone,4,3,Clear,Good,1,0.7,0
-City Station Zone,3,0,Clear,Poor,6,4.3,0
-Sukhadia Circle Zone,12,4,Sunny,Poor,2,1.4,0
-Hiran Magri Zone,17,0,Cloudy,Good,0,0.0,0
-Sukhadia Circle Zone,11,4,Rainy,Fair,8,5.7,0
-Hiran Magri Zone,22,3,Sunny,Good,3,2.1,0
-Delhi Gate Zone,20,3,Clear,Poor,2,1.4,0
-Sukhadia Circle Zone,14,0,Sunny,Good,1,0.7,0
-Hiran Magri Zone,22,0,Clear,Poor,9,6.4,1
-Airport Zone,8,6,Cloudy,Good,2,1.4,0
-Bhupalpura Zone,3,2,Clear,Fair,7,5.0,0
-Airport Zone,4,4,Sunny,Fair,0,0.0,0
-City Station Zone,8,2,Cloudy,Fair,2,1.4,0
-Hiran Magri Zone,12,1,Clear,Fair,3,2.1,0
-Airport Zone,9,1,Rainy,Good,5,3.6,0
-Sukhadia Circle Zone,15,0,Clear,Fair,1,0.7,0
-Sukhadia Circle Zone,12,3,Cloudy,Good,3,2.1,0
-Delhi Gate Zone,3,1,Sunny,Poor,7,5.0,0
-Bhupalpura Zone,20,1,Cloudy,Poor,5,3.6,0
-Hiran Magri Zone,12,2,Sunny,Poor,5,3.6,0
-Airport Zone,20,2,Clear,Fair,0,0.0,0
-Bhupalpura Zone,7,6,Clear,Fair,2,1.4,0
-Delhi Gate Zone,12,6,Cloudy,Fair,2,1.4,0
-City Station Zone,14,1,Rainy,Poor,6,4.3,0
-Bhupalpura Zone,19,0,Clear,Poor,4,2.9,0
-Delhi Gate Zone,19,2,Rainy,Poor,11,7.9,1
-Hiran Magri Zone,12,1,Rainy,Poor,8,5.7,0
-City Station Zone,22,3,Cloudy,Good,3,2.1,0
-Sukhadia Circle Zone,4,2,Clear,Good,2,1.4,0
-Delhi Gate Zone,21,1,Rainy,Fair,5,3.6,0
-Sukhadia Circle Zone,21,6,Clear,Fair,4,2.9,0
-City Station Zone,5,4,Sunny,Poor,5,3.6,0
-Delhi Gate Zone,4,2,Rainy,Good,6,4.3,0
-Delhi Gate Zone,12,4,Cloudy,Good,3,2.1,0
-City Station Zone,4,2,Cloudy,Fair,1,0.7,0
-Hiran Magri Zone,12,2,Rainy,Good,6,4.3,0
-Delhi Gate Zone,23,6,Clear,Fair,4,2.9,0
-City Station Zone,19,5,Sunny,Poor,5,3.6,0
-Bhupalpura Zone,22,5,Sunny,Poor,7,5.0,0
-Sukhadia Circle Zone,7,4,Cloudy,Fair,1,0.7,0
-Delhi Gate Zone,8,0,Cloudy,Poor,2,1.4,0
-Bhupalpura Zone,20,1,Clear,Poor,7,5.0,0
-Delhi Gate Zone,18,0,Cloudy,Good,3,2.1,0
-Hiran Magri Zone,19,0,Clear,Good,4,2.9,0
-City Station Zone,14,5,Rainy,Good,8,5.7,0
-Delhi Gate Zone,21,1,Sunny,Good,2,1.4,0
-City Station Zone,9,5,Rainy,Good,6,4.3,0
-Airport Zone,10,5,Cloudy,Fair,4,2.9,0
-Delhi Gate Zone,4,6,Sunny,Fair,0,0.0,0
-Hiran Magri Zone,8,5,Sunny,Good,1,0.7,0
-Hiran Magri Zone,10,3,Rainy,Poor,10,7.1,1
-Bhupalpura Zone,18,0,Clear,Poor,7,5.0,0
-Hiran Magri Zone,1,6,Sunny,Fair,4,2.9,0
-City Station Zone,5,6,Clear,Fair,4,2.9,0
-Airport Zone,22,0,Rainy,Fair,8,5.7,0
-Hiran Magri Zone,20,6,Rainy,Poor,7,5.0,0
-Delhi Gate Zone,0,0,Clear,Fair,2,1.4,0
-Hiran Magri Zone,2,3,Rainy,Poor,7,5.0,0
-Airport Zone,2,2,Sunny,Fair,2,1.4,0
-City Station Zone,13,6,Rainy,Poor,11,7.9,1
-Delhi Gate Zone,19,4,Rainy,Fair,7,5.0,0
-Bhupalpura Zone,21,4,Sunny,Fair,1,0.7,0
-Bhupalpura Zone,4,3,Clear,Poor,4,2.9,0
-Bhupalpura Zone,16,0,Rainy,Fair,5,3.6,0
-Delhi Gate Zone,14,4,Clear,Good,4,2.9,0
-Bhupalpura Zone,5,3,Sunny,Poor,2,1.4,0
-Hiran Magri Zone,13,5,Clear,Fair,1,0.7,0
-Delhi Gate Zone,13,1,Clear,Poor,8,5.7,0
-Delhi Gate Zone,16,4,Cloudy,Fair,1,0.7,0
-Delhi Gate Zone,7,1,Cloudy,Good,0,0.0,0
-Sukhadia Circle Zone,7,0,Rainy,Fair,5,3.6,0
-City Station Zone,18,4,Cloudy,Fair,0,0.0,0
-Sukhadia Circle Zone,8,3,Cloudy,Good,4,2.9,0
-Sukhadia Circle Zone,10,2,Cloudy,Poor,6,4.3,0
-Sukhadia Circle Zone,12,4,Clear,Fair,3,2.1,0
-City Station Zone,12,4,Clear,Fair,1,0.7,0
-Sukhadia Circle Zone,23,4,Cloudy,Good,6,4.3,0
-Bhupalpura Zone,18,4,Sunny,Poor,3,2.1,0
-Delhi Gate Zone,20,3,Cloudy,Poor,5,3.6,0
-Delhi Gate Zone,18,3,Sunny,Good,4,2.9,0
-Hiran Magri Zone,4,2,Clear,Good,4,2.9,0
-Airport Zone,15,3,Sunny,Fair,3,2.1,0
-Bhupalpura Zone,8,3,Clear,Good,4,2.9,0
-City Station Zone,19,0,Sunny,Good,4,2.9,0
-Airport Zone,21,6,Clear,Good,3,2.1,0
-Delhi Gate Zone,2,0,Clear,Poor,7,5.0,0
-Sukhadia Circle Zone,18,6,Cloudy,Good,1,0.7,0
-Hiran Magri Zone,4,1,Rainy,Fair,6,4.3,0
-Hiran Magri Zone,7,2,Rainy,Fair,7,5.0,0
-Delhi Gate Zone,13,6,Clear,Fair,0,0.0,0
-Bhupalpura Zone,23,0,Cloudy,Good,3,2.1,0
-Airport Zone,2,2,Rainy,Poor,14,10.0,1
-Hiran Magri Zone,23,2,Rainy,Good,6,4.3,0
-Delhi Gate Zone,12,4,Cloudy,Good,0,0.0,0
-Bhupalpura Zone,10,5,Cloudy,Fair,1,0.7,0
-Delhi Gate Zone,7,5,Rainy,Good,5,3.6,0
-Delhi Gate Zone,18,5,Rainy,Poor,8,5.7,0
-Bhupalpura Zone,9,2,Sunny,Fair,0,0.0,0
-Bhupalpura Zone,17,4,Sunny,Poor,4,2.9,0
-Bhupalpura Zone,17,1,Clear,Poor,8,5.7,0
-Delhi Gate Zone,6,1,Rainy,Poor,8,5.7,0
-Hiran Magri Zone,15,5,Cloudy,Good,3,2.1,0
-City Station Zone,5,1,Cloudy,Good,1,0.7,0
-City Station Zone,15,4,Rainy,Good,6,4.3,0
-Delhi Gate Zone,15,5,Clear,Good,2,1.4,0
-Delhi Gate Zone,22,6,Cloudy,Fair,4,2.9,0
-Hiran Magri Zone,23,6,Rainy,Good,9,6.4,1
-Bhupalpura Zone,0,4,Rainy,Fair,8,5.7,0
-Delhi Gate Zone,23,1,Clear,Poor,6,4.3,0
-Sukhadia Circle Zone,18,5,Rainy,Fair,10,7.1,1
-Bhupalpura Zone,2,6,Cloudy,Good,4,2.9,0
-Delhi Gate Zone,5,4,Sunny,Fair,1,0.7,0
-Sukhadia Circle Zone,3,3,Clear,Good,3,2.1,0
-Airport Zone,3,6,Rainy,Good,5,3.6,0
-Hiran Magri Zone,3,3,Clear,Fair,7,5.0,0
-Sukhadia Circle Zone,9,4,Rainy,Fair,7,5.0,0
-Delhi Gate Zone,8,4,Sunny,Poor,3,2.1,0
-City Station Zone,7,0,Clear,Poor,8,5.7,0
-Delhi Gate Zone,18,6,Rainy,Poor,9,6.4,1
-City Station Zone,16,0,Sunny,Poor,1,0.7,0
-Hiran Magri Zone,16,2,Cloudy,Poor,2,1.4,0
-Hiran Magri Zone,0,6,Rainy,Fair,12,8.6,1
-Bhupalpura Zone,19,5,Sunny,Poor,4,2.9,0
-Bhupalpura Zone,13,2,Sunny,Fair,2,1.4,0
-City Station Zone,21,2,Clear,Poor,4,2.9,0
-City Station Zone,19,1,Rainy,Good,5,3.6,0
-Hiran Magri Zone,10,3,Cloudy,Poor,3,2.1,0
-Sukhadia Circle Zone,2,1,Rainy,Good,8,5.7,0
-City Station Zone,23,5,Sunny,Fair,4,2.9,0
-City Station Zone,7,4,Cloudy,Poor,4,2.9,0
-Sukhadia Circle Zone,21,0,Sunny,Fair,4,2.9,0
-Bhupalpura Zone,9,5,Clear,Poor,6,4.3,0
-Bhupalpura Zone,16,4,Rainy,Fair,4,2.9,0
-City Station Zone,7,5,Sunny,Poor,3,2.1,0
-Bhupalpura Zone,21,4,Sunny,Poor,7,5.0,0
-Bhupalpura Zone,0,6,Rainy,Good,9,6.4,1
-Airport Zone,19,0,Cloudy,Fair,1,0.7,0
-Bhupalpura Zone,20,4,Sunny,Fair,4,2.9,0
-Hiran Magri Zone,6,2,Rainy,Fair,6,4.3,0
-Delhi Gate Zone,23,5,Clear,Fair,5,3.6,0
-City Station Zone,8,0,Clear,Fair,4,2.9,0
-City Station Zone,11,4,Rainy,Good,9,6.4,1
-Hiran Magri Zone,21,2,Sunny,Poor,4,2.9,0
-Delhi Gate Zone,8,2,Rainy,Good,5,3.6,0
-Delhi Gate Zone,19,6,Rainy,Fair,5,3.6,0
-Hiran Magri Zone,23,3,Sunny,Fair,7,5.0,0
-Sukhadia Circle Zone,2,2,Cloudy,Poor,6,4.3,0
-Sukhadia Circle Zone,3,1,Cloudy,Good,4,2.9,0
-Delhi Gate Zone,9,0,Clear,Poor,5,3.6,0
-Sukhadia Circle Zone,3,0,Cloudy,Poor,5,3.6,0
-Sukhadia Circle Zone,21,0,Rainy,Good,4,2.9,0
-Sukhadia Circle Zone,8,4,Sunny,Poor,5,3.6,0
-Delhi Gate Zone,21,5,Clear,Good,4,2.9,0
-Sukhadia Circle Zone,0,4,Cloudy,Good,6,4.3,0
-City Station Zone,4,1,Rainy,Fair,3,2.1,0
-Airport Zone,8,5,Clear,Poor,2,1.4,0
-Delhi Gate Zone,4,6,Sunny,Fair,3,2.1,0
-Hiran Magri Zone,5,2,Cloudy,Poor,7,5.0,0
-Sukhadia Circle Zone,18,4,Rainy,Poor,11,7.9,1
-Bhupalpura Zone,7,5,Sunny,Fair,4,2.9,0
-Delhi Gate Zone,9,2,Rainy,Fair,7,5.0,0
-Hiran Magri Zone,10,5,Rainy,Fair,6,4.3,0
-Airport Zone,12,2,Rainy,Good,9,6.4,1
-City Station Zone,19,5,Sunny,Poor,5,3.6,0
-Hiran Magri Zone,3,4,Clear,Good,5,3.6,0
-Sukhadia Circle Zone,10,4,Rainy,Poor,9,6.4,1
-Bhupalpura Zone,11,1,Clear,Poor,2,1.4,0
-Sukhadia Circle Zone,4,6,Clear,Good,1,0.7,0
-Hiran Magri Zone,9,6,Cloudy,Good,0,0.0,0
-Delhi Gate Zone,23,3,Cloudy,Poor,4,2.9,0
-Bhupalpura Zone,6,0,Clear,Fair,0,0.0,0
-Bhupalpura Zone,20,4,Cloudy,Fair,0,0.0,0
-Hiran Magri Zone,8,4,Cloudy,Fair,1,0.7,0
-Airport Zone,8,2,Clear,Fair,4,2.9,0
-Airport Zone,9,3,Sunny,Poor,5,3.6,0
-Sukhadia Circle Zone,9,6,Cloudy,Fair,4,2.9,0
-Hiran Magri Zone,1,4,Cloudy,Fair,2,1.4,0
-Bhupalpura Zone,3,5,Sunny,Fair,3,2.1,0
-Hiran Magri Zone,7,6,Sunny,Poor,3,2.1,0
-Bhupalpura Zone,13,3,Sunny,Good,1,0.7,0
-Sukhadia Circle Zone,16,0,Clear,Fair,1,0.7,0
-Delhi Gate Zone,12,5,Sunny,Poor,3,2.1,0
-Delhi Gate Zone,20,2,Clear,Poor,4,2.9,0
-Hiran Magri Zone,23,1,Rainy,Fair,5,3.6,0
-Bhupalpura Zone,17,5,Rainy,Good,5,3.6,0
-Delhi Gate Zone,17,6,Sunny,Good,4,2.9,0
-Bhupalpura Zone,12,0,Sunny,Good,3,2.1,0
-Sukhadia Circle Zone,7,5,Rainy,Poor,9,6.4,1
-Hiran Magri Zone,11,3,Clear,Fair,1,0.7,0
-Bhupalpura Zone,22,3,Clear,Fair,4,2.9,0
-Hiran Magri Zone,23,0,Sunny,Poor,8,5.7,0
-Bhupalpura Zone,20,6,Sunny,Fair,1,0.7,0
-Airport Zone,0,3,Sunny,Fair,3,2.1,0
-Airport Zone,19,5,Rainy,Good,4,2.9,0
-Bhupalpura Zone,17,1,Cloudy,Fair,3,2.1,0
-Sukhadia Circle Zone,2,5,Sunny,Fair,5,3.6,0
-Hiran Magri Zone,11,1,Clear,Poor,6,4.3,0
-City Station Zone,18,3,Cloudy,Poor,3,2.1,0
-Bhupalpura Zone,12,5,Clear,Good,0,0.0,0
-Bhupalpura Zone,9,3,Cloudy,Poor,3,2.1,0
-Airport Zone,14,6,Rainy,Good,3,2.1,0
-Delhi Gate Zone,19,1,Cloudy,Good,1,0.7,0
-Airport Zone,1,6,Clear,Fair,1,0.7,0
-Hiran Magri Zone,18,3,Cloudy,Good,1,0.7,0
-Airport Zone,2,4,Rainy,Fair,10,7.1,1
-City Station Zone,13,2,Clear,Good,3,2.1,0
-Sukhadia Circle Zone,6,5,Sunny,Poor,6,4.3,0
-City Station Zone,7,4,Cloudy,Poor,5,3.6,0
-Sukhadia Circle Zone,10,6,Clear,Poor,2,1.4,0
-City Station Zone,21,3,Cloudy,Good,1,0.7,0
-Airport Zone,19,3,Rainy,Good,5,3.6,0
-City Station Zone,5,2,Clear,Fair,0,0.0,0
-Airport Zone,10,3,Sunny,Fair,1,0.7,0
-Airport Zone,16,2,Sunny,Fair,0,0.0,0
-Hiran Magri Zone,9,5,Cloudy,Fair,3,2.1,0
-Airport Zone,23,1,Rainy,Good,10,7.1,1
-Delhi Gate Zone,16,2,Rainy,Good,4,2.9,0
-City Station Zone,20,2,Cloudy,Fair,3,2.1,0
-Bhupalpura Zone,1,4,Clear,Good,7,5.0,0
-Bhupalpura Zone,5,3,Clear,Good,1,0.7,0
-Bhupalpura Zone,4,5,Cloudy,Good,3,2.1,0
-Delhi Gate Zone,3,1,Clear,Good,6,4.3,0
-Airport Zone,1,0,Clear,Fair,3,2.1,0
-City Station Zone,11,6,Clear,Fair,0,0.0,0
-Sukhadia Circle Zone,2,2,Cloudy,Good,6,4.3,0
-Sukhadia Circle Zone,5,0,Sunny,Poor,5,3.6,0
-Hiran Magri Zone,23,3,Rainy,Fair,7,5.0,0
-Delhi Gate Zone,13,6,Sunny,Fair,0,0.0,0
-City Station Zone,7,2,Clear,Poor,6,4.3,0
-Airport Zone,20,0,Cloudy,Fair,2,1.4,0
-Bhupalpura Zone,20,4,Rainy,Poor,6,4.3,0
-Delhi Gate Zone,13,0,Clear,Poor,8,5.7,0
-Delhi Gate Zone,2,6,Rainy,Good,10,7.1,1
-City Station Zone,15,4,Rainy,Fair,3,2.1,0
-Airport Zone,14,6,Sunny,Poor,4,2.9,0
-Hiran Magri Zone,6,1,Clear,Good,4,2.9,0
-Airport Zone,14,3,Rainy,Fair,6,4.3,0
-Hiran Magri Zone,12,5,Sunny,Good,3,2.1,0
-Hiran Magri Zone,5,0,Cloudy,Good,4,2.9,0
-Bhupalpura Zone,14,2,Rainy,Poor,10,7.1,1
-Bhupalpura Zone,16,6,Clear,Fair,2,1.4,0
-City Station Zone,3,6,Cloudy,Good,6,4.3,0
-Airport Zone,21,3,Rainy,Poor,5,3.6,0
-Hiran Magri Zone,21,0,Rainy,Poor,8,5.7,0
-City Station Zone,13,2,Clear,Good,1,0.7,0
-Hiran Magri Zone,14,2,Rainy,Good,6,4.3,0
-Delhi Gate Zone,11,6,Clear,Poor,3,2.1,0
+3,20,4,2,0,2,2.8,1
+1,21,4,1,2,0,1.7,0
+3,3,2,0,2,0,2.4,0
+4,11,3,0,0,0,0.1,0
+4,5,6,2,1,0,2.2,0
+2,7,0,0,0,0,0.0,0
+0,10,1,1,2,0,1.6,0
+4,11,4,0,0,0,0.0,0
+4,21,6,0,0,0,0.0,0
+0,0,2,0,0,0,0.0,0
+4,5,2,0,1,0,1.4,0
+2,18,5,0,0,3,2.2,0
+3,14,3,0,1,0,1.0,0
+4,0,1,1,0,0,0.5,0
+1,3,1,0,0,0,0.6,0
+0,23,6,2,0,1,1.8,0
+0,9,4,0,0,2,1.6,0
+3,18,3,0,1,0,0.0,0
+2,15,2,2,0,2,2.3,0
+1,23,1,1,0,0,0.2,0
+0,0,6,2,0,1,1.6,0
+3,1,1,0,0,0,0.4,0
+3,15,5,0,0,0,0.1,0
+1,23,6,1,0,0,0.0,0
+4,23,6,2,2,1,3.0,1
+1,2,4,0,0,0,0.0,0
+2,5,5,1,2,1,2.7,1
+1,9,4,0,0,0,0.5,0
+1,13,5,0,0,0,0.6,0
+0,7,5,2,0,0,0.7,0
+4,14,2,0,1,0,1.4,0
+0,4,3,1,2,1,2.1,0
+1,16,4,0,0,0,0.3,0
+4,20,5,1,0,0,0.0,0
+1,12,1,0,1,0,0.5,0
+2,3,3,1,0,0,0.9,0
+1,15,2,0,0,1,0.8,0
+0,16,1,0,0,0,0.8,0
+0,2,6,0,0,0,0.3,0
+2,23,4,0,0,0,0.3,0
+3,17,6,0,0,1,0.5,0
+0,11,4,2,0,0,1.0,0
+1,3,1,0,1,0,0.4,0
+4,18,6,0,0,0,0.0,0
+3,7,1,3,2,0,3.1,1
+0,14,6,0,0,0,0.0,0
+1,15,0,0,0,0,0.0,0
+4,20,5,2,1,1,2.6,0
+3,14,4,1,0,0,0.0,0
+2,18,5,0,0,0,0.5,0
+0,23,5,1,0,0,0.1,0
+1,10,2,0,0,0,0.0,0
+0,8,0,1,0,0,0.8,0
+3,13,4,1,0,0,0.0,0
+3,8,0,2,0,0,0.2,0
+0,15,2,0,0,0,0.0,0
+0,3,2,0,0,0,1.0,0
+1,16,3,2,0,0,0.7,0
+0,11,0,0,0,0,0.0,0
+0,2,0,0,0,0,0.0,0
+1,5,2,0,0,0,0.0,0
+1,18,2,1,0,0,1.0,0
+3,23,5,1,0,0,0.0,0
+3,22,3,0,0,0,0.0,0
+0,1,6,0,0,0,0.2,0
+4,14,0,0,0,0,0.0,0
+3,3,2,2,0,2,3.1,1
+0,23,4,0,1,0,0.0,0
+4,9,0,0,0,0,0.0,0
+3,0,1,1,0,0,0.6,0
+2,21,6,0,0,0,0.0,0
+0,9,1,0,1,0,0.5,0
+3,11,1,0,0,0,0.0,0
+0,2,5,0,1,0,1.0,0
+0,15,2,0,1,1,1.4,0
+3,5,3,1,0,0,0.4,0
+2,2,1,0,0,0,1.4,0
+0,5,6,0,1,1,1.3,0
+1,3,3,0,1,0,1.0,0
+1,22,6,1,1,0,0.7,0
+3,20,1,0,0,0,0.1,0
+3,12,0,0,0,0,0.0,0
+0,21,1,0,0,0,0.4,0
+2,8,4,0,0,0,0.0,0
+4,12,4,0,1,0,0.7,0
+1,16,4,1,0,0,0.0,0
+2,8,5,0,1,0,0.2,0
+1,14,3,0,2,0,1.2,0
+4,17,5,0,0,0,0.8,0
+3,15,0,0,0,0,1.5,0
+3,4,6,0,0,0,0.0,0
+3,22,2,0,2,0,1.2,0
+1,5,6,0,0,1,1.4,0
+4,16,3,1,1,0,0.7,0
+3,5,1,1,0,0,0.4,0
+0,22,2,1,1,1,1.0,0
+4,2,2,1,2,1,2.4,0
+1,9,0,0,0,0,0.0,0
+3,0,4,0,0,1,0.5,0
+0,14,4,1,0,0,0.5,0
+0,0,1,1,0,0,0.4,0
+4,15,1,0,1,0,0.8,0
+0,6,3,0,1,0,1.0,0
+0,11,2,0,0,0,0.0,0
+0,3,1,1,1,0,1.5,0
+4,18,3,0,0,0,0.0,0
+2,4,4,0,0,0,0.0,0
+3,8,3,0,0,0,0.8,0
+1,5,2,0,0,1,1.1,0
+2,17,5,0,0,0,0.2,0
+4,0,2,0,1,0,0.6,0
+1,16,1,0,2,0,1.7,0
+0,8,0,0,2,0,0.6,0
+4,2,0,1,0,0,0.6,0
+1,11,5,0,0,0,0.1,0
+0,20,2,1,0,0,0.0,0
+1,2,0,2,0,0,1.0,0
+3,16,1,0,2,0,1.9,0
+2,13,6,2,0,0,0.7,0
+1,1,5,2,0,0,0.5,0
+4,17,6,2,0,2,3.2,1
+4,8,3,0,0,3,2.3,0
+2,18,5,0,2,0,0.7,0
+1,23,0,0,0,0,0.7,0
+2,11,5,1,0,1,1.4,0
+0,2,1,0,0,0,0.1,0
+4,17,1,0,0,0,0.0,0
+1,2,0,2,0,0,0.2,0
+0,2,2,2,0,0,1.4,0
+2,1,6,0,0,0,0.2,0
+0,21,2,0,1,0,1.0,0
+0,21,6,1,2,1,2.5,0
+0,1,5,2,0,0,1.5,0
+4,3,4,2,0,0,1.0,0
+2,14,6,2,0,0,1.2,0
+3,23,4,0,0,0,0.1,0
+1,0,0,0,0,0,0.0,0
+3,1,2,0,0,0,0.0,0
+2,8,1,0,0,1,0.5,0
+2,13,5,0,0,0,0.0,0
+1,11,1,0,0,1,0.0,0
+2,19,4,0,0,0,0.0,0
+0,4,6,0,0,0,0.4,0
+1,17,6,2,0,2,2.8,1
+1,19,1,0,0,0,0.0,0
+3,5,3,0,0,0,0.0,0
+4,3,0,1,0,0,1.0,0
+4,4,4,0,1,0,0.0,0
+2,12,2,0,1,1,1.2,0
+0,20,3,0,1,0,0.6,0
+2,15,4,0,0,0,0.0,0
+3,12,5,0,0,0,0.1,0
+2,0,3,0,1,0,2.1,0
+3,12,6,0,0,0,0.0,0
+3,4,3,0,0,0,0.3,0
+3,15,5,0,1,0,0.8,0
+4,19,5,0,0,0,0.1,0
+4,21,6,0,1,0,1.0,0
+2,8,6,0,1,0,1.1,0
+0,4,6,2,0,1,2.6,0
+4,20,6,0,0,0,0.0,0
+0,22,4,0,0,0,0.0,0
+0,16,5,3,2,0,3.1,1
+1,17,5,1,0,0,0.3,0
+1,14,6,0,1,0,0.0,0
+1,18,0,0,0,1,0.3,0
+2,18,2,0,1,0,1.0,0
+0,0,2,0,0,0,0.0,0
+1,11,3,0,0,0,0.0,0
+0,1,2,2,0,0,0.8,0
+2,11,1,1,1,0,2.0,0
+0,10,4,0,0,2,2.0,0
+4,15,6,1,0,0,0.6,0
+1,14,6,2,0,0,0.9,0
+0,12,2,0,0,0,0.0,0
+0,0,4,1,0,0,0.5,0
+1,18,2,0,0,0,0.0,0
+0,15,3,1,0,0,0.7,0
+3,23,6,0,1,0,0.5,0
+1,22,2,0,2,0,1.6,0
+2,9,6,1,2,1,2.3,0
+1,8,0,0,1,0,0.6,0
+1,4,1,1,0,0,0.4,0
+1,23,0,0,0,0,0.0,0
+1,9,2,1,0,0,0.2,0
+4,7,0,0,1,0,0.7,0
+3,16,0,0,0,1,1.0,0
+3,4,4,0,2,0,1.3,0
+2,8,5,2,0,0,0.9,0
+2,10,4,2,0,3,2.9,1
+2,2,3,0,0,0,0.2,0
+3,9,6,1,0,0,0.3,0
+4,20,5,0,0,0,0.2,0
+1,18,1,0,1,3,2.9,1
+3,5,0,0,0,0,0.8,0
+1,17,6,0,0,0,0.0,0
+3,14,0,2,0,0,1.6,0
+1,16,3,3,1,1,2.3,0
+2,8,6,1,2,0,1.6,0
+4,5,1,1,2,0,1.9,0
+1,23,4,0,0,0,0.5,0
+4,22,4,0,0,0,0.0,0
+1,1,2,0,0,0,0.3,0
+3,11,4,2,0,0,0.5,0
+0,1,6,0,0,0,0.6,0
+2,22,5,0,0,0,0.0,0
+0,22,6,2,0,0,0.0,0
+2,17,6,0,1,0,0.6,0
+0,7,1,0,1,0,0.8,0
+0,1,2,1,1,0,1.4,0
+0,21,3,0,0,0,0.5,0
+3,17,0,0,1,2,2.6,0
+1,16,5,0,1,0,0.9,0
+1,6,1,0,1,0,0.5,0
+0,11,0,0,0,0,0.0,0
+2,19,0,0,1,0,1.0,0
+1,4,5,0,1,0,0.4,0
+1,11,5,0,0,0,0.0,0
+3,11,2,1,0,1,0.8,0
+4,5,0,0,0,0,0.0,0
+4,3,6,3,0,0,1.7,0
+2,7,4,0,0,0,0.0,0
+4,17,2,0,0,0,0.0,0
+0,16,3,1,0,0,1.1,0
+2,0,2,0,1,0,0.9,0
+4,12,4,1,0,0,0.6,0
+4,19,6,0,0,1,1.4,0
+1,22,6,0,1,0,0.5,0
+0,1,3,1,0,0,0.7,0
+2,7,4,0,0,0,0.0,0
+3,6,6,0,0,0,0.0,0
+1,5,1,0,1,0,0.0,0
+3,9,1,1,2,0,0.8,0
+0,9,4,1,0,2,1.5,0
+1,10,5,1,0,3,2.2,0
+3,0,5,0,0,0,0.0,0
+2,6,5,0,0,0,0.0,0
+4,12,2,0,0,0,0.0,0
+3,15,5,2,2,1,3.0,1
+2,9,5,1,0,0,0.6,0
+4,6,1,1,0,0,0.5,0
+0,22,4,0,0,0,0.0,0
+2,9,4,2,1,3,3.8,1
+0,13,1,0,0,0,0.8,0
+1,15,5,3,0,0,1.7,0
+0,13,2,0,1,1,0.9,0
+4,5,0,0,1,0,0.0,0
+4,3,4,1,0,0,0.0,0
+2,12,2,1,0,1,1.0,0
+1,16,6,3,0,0,0.5,0
+0,16,0,0,0,0,0.2,0
+1,10,3,0,1,0,0.0,0
+2,7,5,0,0,0,0.0,0
+0,1,0,0,0,0,0.2,0
+3,3,5,1,0,0,0.6,0
+3,20,5,0,0,0,0.5,0
+3,19,3,0,0,0,0.0,0
+4,1,1,0,0,0,1.4,0
+3,2,6,1,0,0,0.0,0
+1,1,1,1,0,0,0.7,0
+2,16,1,3,1,0,1.0,0
+1,7,5,1,0,0,1.0,0
+1,3,0,0,0,0,0.0,0
+0,1,1,0,1,0,1.3,0
+2,21,5,1,0,0,1.2,0
+0,9,5,0,0,0,0.3,0
+2,11,1,2,2,0,1.7,0
+3,17,6,1,1,0,0.1,0
+0,1,3,0,0,1,1.2,0
+0,4,3,0,0,0,0.0,0
+1,17,1,3,0,2,2.5,0
+2,18,2,1,0,1,1.5,0
+4,18,0,0,1,0,1.2,0
+1,12,1,1,0,0,0.0,0
+2,3,2,1,1,0,1.8,0
+1,23,3,3,0,0,0.6,0
+1,10,1,0,0,0,0.0,0
+4,23,1,0,0,0,0.0,0
+3,17,0,0,0,2,1.6,0
+0,2,2,0,2,0,1.4,0
+4,4,3,0,0,0,0.0,0
+0,21,4,1,0,0,0.0,0
+3,20,3,0,0,0,0.0,0
+2,5,3,0,0,1,0.8,0
+3,8,1,1,0,1,0.8,0
+4,15,5,1,0,0,0.3,0
+2,0,0,0,0,0,0.5,0
+2,0,0,1,0,0,0.3,0
+4,1,1,0,0,0,0.0,0
+2,6,6,0,0,0,0.0,0
+1,2,2,1,0,0,0.0,0
+3,6,6,1,0,0,0.0,0
+4,1,6,0,0,0,0.2,0
+1,21,0,1,0,1,2.4,0
+0,22,5,1,0,0,0.0,0
+1,16,5,0,1,1,1.7,0
+4,11,3,1,2,1,0.9,0
+4,15,2,1,0,0,0.0,0
+1,15,0,0,2,1,1.2,0
+3,21,6,0,0,0,0.5,0

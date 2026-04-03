@@ -58,7 +58,7 @@ def build_xy_traffic(df: pd.DataFrame):
     d = df.rename(
         columns={"junction": "junction_enc", "day_of_week": "day_enc", "weather": "weather_enc"}
     )
-    X = d[["hour", "day_enc", "junction_enc", "weather_enc", "vehicles"]]
+    X = d[["hour", "day_enc", "junction_enc", "weather_enc", "temperature_c", "vehicles"]]
     y = d["high_congestion"]
     return X, y
 

@@ -22,8 +22,8 @@ LOCATION_META = {
     6: ("Surajpol", 24.5833, 73.6833),
     7: ("Bhupalpura", 24.6000, 73.7000),
     8: ("Delhi Gate", 24.5764, 73.6839),
-    9: ("Pratap Nagar", 24.5985, 73.7310),
-    10: ("Madhuban", 24.5860, 73.7140),
+    9: ("Pratap Nagar Sec-2", 24.6010, 73.7330),
+    10: ("Madhuban Chauraha", 24.5875, 73.7155),
 }
 
 

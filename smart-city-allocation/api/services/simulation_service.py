@@ -168,7 +168,8 @@ class RealDataSimulator:
         em = self.emergency
         if len(em) > 0:
             risky = em[em["high_risk"] == 1]
-            if len(risky) > 0 and self._rng.random() < 0.15:
+            # RARE high-risk events: 3-5% probability (not 15%!)
+            if len(risky) > 0 and self._rng.random() < 0.04:  # 4% for high-risk
                 r = risky.sample(n=1, random_state=self._tick % 10000).iloc[0]
                 zone = int(r["zone"])
                 loc = next((l for l, z in self._loc_to_zone.items() if z == zone), self._rng.randint(1, 10))
@@ -181,7 +182,7 @@ class RealDataSimulator:
                         location_id=loc,
                     )
                 )
-            elif self._rng.random() < 0.03:
+            elif self._rng.random() < 0.02:  # 2% for low-risk
                 loc = self._rng.randint(1, 10)
                 self._emergency_buffer.append(
                     EmergencyEvent(
