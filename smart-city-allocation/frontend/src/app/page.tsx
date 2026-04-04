@@ -197,13 +197,19 @@ export default function Dashboard() {
         <div className="flex items-center gap-4 text-sm font-medium text-slate-400 flex-wrap">
           {data?.data_source && (
             <div
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 shadow-lg ${
                 ds === "real_data"
-                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                  : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-emerald-500/20"
+                  : "bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-amber-500/20"
               }`}
             >
-              <span className="font-bold tracking-widest text-[11px] uppercase">{dsLabel}</span>
+              <div className={`w-2 h-2 rounded-full animate-pulse ${
+                ds === "real_data" ? "bg-emerald-400" : "bg-amber-400"
+              }`} />
+              <span className="font-bold tracking-widest text-xs uppercase">{dsLabel}</span>
+              {ds !== "real_data" && (
+                <span className="text-[10px] opacity-75">(Simulated)</span>
+              )}
             </div>
           )}
           <div className="flex items-center gap-1 text-[11px] uppercase text-slate-500">
@@ -212,7 +218,7 @@ export default function Dashboard() {
             ) : (
               <WifiOff className="w-4 h-4 text-amber-400" />
             )}
-            {wsStatus === "connected" ? "WS live" : "WS fallback"}
+            {wsStatus === "connected" ? "Live" : "Polling"}
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
@@ -224,9 +230,8 @@ export default function Dashboard() {
             }`}
           >
             <RefreshCw className={`w-4 h-4 ${!error && "animate-spin-slow duration-[3000ms]"}`} />
-            <span>{error ? "CONNECTION LOST" : "SYSTEM ONLINE"}</span>
+            <span>{error ? "OFFLINE" : "ONLINE"}</span>
           </div>
-          {/* Stale data warning — shows when connection has been lost for >30s */}
           {isStale && (
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-bold uppercase tracking-widest">
               <Clock className="w-3.5 h-3.5" />
@@ -366,17 +371,17 @@ export default function Dashboard() {
               </ErrorBoundary>
             </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-1 border-r border-slate-800 pr-0">
+            <div className="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3">
               <ErrorBoundary fallbackText="Map Render Error">
                 {!data ? (
-                  <div className="glass-panel h-[400px] animate-pulse bg-slate-800/40 rounded-xl" />
+                  <div className="glass-panel h-[600px] animate-pulse bg-slate-800/40 rounded-xl" />
                 ) : (
                   <MapComponent mapData={mapData} />
                 )}
               </ErrorBoundary>
             </div>
 
-            <div className="col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
+            <div className="col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 row-span-1">
               <ErrorBoundary fallbackText="Chart Render Error">
                 {!data ? (
                   <div className="glass-panel h-[400px] animate-pulse bg-slate-800/40 rounded-xl" />

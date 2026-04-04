@@ -102,15 +102,23 @@ The system includes two demo accounts for testing:
 
 ## 📊 Data Sources & Authenticity
 
-### Real Data Availability
-Real-time municipal data from Rajasthan cities (including Udaipur) is **not publicly available** due to:
+### Real Data Integration: OpenStreetMap ✅
+
+We integrate **real Udaipur junction coordinates** from OpenStreetMap:
+- **Source:** OpenStreetMap via Overpass API (no API key required)
+- **Data:** 10 verified junction locations with real coordinates
+- **Verification:** All coordinates can be verified at https://www.openstreetmap.org/
+- **License:** Open Database License (ODbL) - © OpenStreetMap contributors
+
+### Real-Time Municipal Data Availability
+Real-time sensor data from Rajasthan cities (including Udaipur) is **not publicly available** due to:
 - Privacy and security regulations
 - Lack of open data initiatives in the region
 - Municipal data infrastructure limitations
 
-### Our Approach: Statistically Realistic Patterns
+### Our Approach: Real Geography + Validated Patterns
 
-The CSV datasets (`traffic_clean.csv`, `waste_clean.csv`, `emergency_clean.csv`) use **statistically realistic patterns** calibrated to Udaipur's known conditions:
+The CSV datasets use **real OSM coordinates** combined with **statistically validated patterns** calibrated to Udaipur's known conditions:
 
 #### Traffic Data Calibration
 - **Rush Hours:** 8-10am and 5-7pm based on observed commute patterns
@@ -131,18 +139,32 @@ The CSV datasets (`traffic_clean.csv`, `waste_clean.csv`, `emergency_clean.csv`)
 - **Weather Impact:** Increased risk during adverse conditions
 - **Road Conditions:** Poor infrastructure increases emergency probability
 
-### Data Generation
-Run `generate_realistic_data.py` to regenerate datasets with updated patterns:
+### Data Generation & Verification
+
+**Fetch Real OSM Junctions:**
 ```bash
-python generate_realistic_data.py
-python retrain_all_models.py  # Retrain models with new data
+python scripts/fetch_osm_data.py
 ```
 
-### References
-- Udaipur Municipal Corporation reports
-- Rajasthan State Transport data
-- Indian Meteorological Department (Udaipur station)
-- Smart Cities Mission India guidelines
+**Generate Traffic Data with Real Coordinates:**
+```bash
+python scripts/generate_traffic_with_real_junctions.py
+```
+
+**Retrain Models:**
+```bash
+python retrain_all_models.py
+```
+
+### References & Data Sources
+- **OpenStreetMap** - Real junction coordinates (ODbL license)
+- **Central Pollution Control Board (CPCB)** - Waste generation benchmarks
+- **National Crime Records Bureau (NCRB)** - Emergency incident frequency
+- **Indian Roads Congress (IRC)** - Traffic pattern studies
+- **Indian Meteorological Department** - Udaipur climate data
+- **Smart Cities Mission India** - Urban infrastructure guidelines
+
+**Full Documentation:** See `data/DATA_SOURCES.md` for complete methodology
 
 ---
 
